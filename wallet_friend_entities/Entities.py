@@ -40,6 +40,7 @@ class Role(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     name = Column(String(45), nullable=False, unique=True)
     description = Column(String(150), nullable=True)
+    creation_datetime = Column(DateTime, nullable=False)
     # ===Permissions relationship===
     # M to M.
     permissions = relationship('Permission', secondary='t_role_permission', back_populates='roles')
@@ -51,6 +52,7 @@ class Role(Base):
 class Permission(Base):
     __tablename__ = 't_permission'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+    creation_datetime = Column(DateTime, nullable=False)
     name = Column(String(50), nullable=False, unique=True)
     roles = relationship('Role', secondary='t_role_permission', back_populates='permissions')
 

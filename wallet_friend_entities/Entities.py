@@ -51,8 +51,8 @@ class Role(Base):
 
 class Permission(Base):
     __tablename__ = 't_permission'  # Indexed.
-    id: int = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    name: str = Column(String(50), nullable=False, unique=True)
+    id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+    name = Column(String(50), nullable=False, unique=True)
     roles = relationship('Role', secondary='t_role_permission', back_populates='permissions')
 
 
@@ -63,9 +63,9 @@ User-Role intermediate table.
 
 class UserRole(Base):
     __tablename__ = 't_user_role'  # Indexed.
-    id: int = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    user_id: int = Column(BigInteger, ForeignKey('t_user.id'))
-    role_id: int = Column(BigInteger, ForeignKey('t_role.id'))
+    id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+    user_id = Column(BigInteger, ForeignKey('t_user.id'))
+    role_id = Column(BigInteger, ForeignKey('t_role.id'))
 
 
 """
@@ -75,9 +75,9 @@ Role-Permission intermediate table.
 
 class RolePermission(Base):
     __tablename__ = 't_role_permission'  # Indexed.
-    id: int = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    role_id: int = Column(BigInteger, ForeignKey('t_role.id'))
-    permission_id: int = Column(BigInteger, ForeignKey('t_permission.id'))
+    id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+    role_id = Column(BigInteger, ForeignKey('t_role.id'))
+    permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
 
 
 

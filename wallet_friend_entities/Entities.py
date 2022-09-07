@@ -26,7 +26,6 @@ class User(Base):
     creation_datetime = Column(DateTime, nullable=False)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
-    token = Column(String(256), nullable=True)
     enabled = Column(Boolean, nullable=False)
     # ===Role relationship===
     # M to M.

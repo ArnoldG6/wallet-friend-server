@@ -21,27 +21,27 @@ api_versions = ["v1.0"]
 latest_version = api_versions[-1]
 
 
-@app.route(f"{latest_version}/auth", methods=["POST"])
+@app.route(f"/{latest_version}/auth", methods=["POST"])
 def auth():
     try:
         return {"msg": "Service Unavailable"}, 503
     except Exception as e:
-        logging.info(e)
+        logging.exception(e)
         return {"error_code": 500, "error_desc": "Internal Server Error"}, 500
 
 
-@app.route(f"{latest_version}/auth", methods=["GET"])
+@app.route(f"/{latest_version}/auth", methods=["GET"])
 def check_authorization():
     try:
         return {"msg": "Service Unavailable"}, 503
     except Exception as e:
-        logging.info(e)
+        logging.exception(e)
         return {"error_code": 500, "error_desc": "Internal Server Error"}, 500
 
 
 def start_development_server():
     """
-    Warning!: Development use only.
+    Warning!: Development use only.  Do not use on production.
     """
     logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
     app.run(threaded=True, port=80)

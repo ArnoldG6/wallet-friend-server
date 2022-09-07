@@ -80,7 +80,4 @@ class RolePermission(Base):
     permission_id: int = Column(BigInteger, ForeignKey('t_permission.id'))
 
 
-db_string = "postgresql://wallet_friend_dba:Ko62gL1p30V@zlocalhost:5432/mqd_catalogue"
 
-db = create_engine(db_string)
-Base.metadata.create_all(db, Base.metadata.tables.values())

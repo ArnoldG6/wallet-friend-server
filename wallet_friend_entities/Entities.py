@@ -5,7 +5,7 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 
-from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean, create_engine
+from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -78,6 +78,3 @@ class RolePermission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
-
-
-

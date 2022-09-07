@@ -9,7 +9,7 @@ On fresh install:
 sudo su -l postgres
 psql
 \password #Enter new password here.
-CREATE USER wallet_friend_dba WITH PASSWORD 'Ko62gL1p30V@';
+CREATE USER wallet_friend_dba WITH PASSWORD 'Ko62gL1p30Vz';
 CREATE DATABASE wallet_friend_db OWNER wallet_friend_dba ENCODING 'UTF8';
 exit #exits psql
 exit #exits postgres user

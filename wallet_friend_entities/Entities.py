@@ -5,7 +5,7 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 
-from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean
+from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -80,4 +80,7 @@ class RolePermission(Base):
     permission_id: int = Column(BigInteger, ForeignKey('t_permission.id'))
 
 
+db_string = "postgresql://wallet_friend_dba:Ko62gL1p30V@zlocalhost:5432/mqd_catalogue"
 
+db = create_engine(db_string)
+Base.metadata.create_all(db, Base.metadata.tables.values())

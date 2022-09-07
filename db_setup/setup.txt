@@ -1,0 +1,15 @@
+"""
+@author: "Arnoldo J. González Quesada".
+Github username: "ArnoldG6".
+Contact me via "arnoldgq612@gmail.com".
+GPL-3.0 license ©2022
+"""
+
+On fresh install:
+sudo su -l postgres
+psql
+\password #Enter new password here.
+CREATE USER wallet_friend_dba WITH PASSWORD 'Ko62gL1p30V@';
+CREATE DATABASE wallet_friend_db OWNER wallet_friend_dba ENCODING 'UTF8';
+exit #exits psql
+exit #exits postgres user

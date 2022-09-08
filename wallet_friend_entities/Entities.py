@@ -4,7 +4,7 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
-
+import pydantic
 from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -12,6 +12,7 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
+@pydantic.dataclasses.dataclass
 class User(Base):
     """
     User class is used to store user minimum information in order to
@@ -31,7 +32,13 @@ class User(Base):
     # M to M.
     roles = relationship('Role', secondary='t_user_role', back_populates='users')
 
+    def dict_rep(self):
+        result = super().__dict__
+        result["roles"] = self.roles
+        return result
 
+
+@pydantic.dataclasses.dataclass
 class Role(Base):
     """
      Role class defines what permissions users actually have.
@@ -49,6 +56,7 @@ class Role(Base):
     users = relationship('User', secondary='t_user_role', back_populates='roles')
 
 
+@pydantic.dataclasses.dataclass
 class Permission(Base):
     __tablename__ = 't_permission'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
@@ -57,25 +65,22 @@ class Permission(Base):
     roles = relationship('Role', secondary='t_role_permission', back_populates='permissions')
 
 
-"""
-User-Role intermediate table.
-"""
-
-
 class UserRole(Base):
+    """
+    User-Role intermediate table.
+    """
     __tablename__ = 't_user_role'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     user_id = Column(BigInteger, ForeignKey('t_user.id'))
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
 
 
-"""
-Role-Permission intermediate table.
-"""
-
-
 class RolePermission(Base):
+    """
+    Role-Permission intermediate table.
+    """
     __tablename__ = 't_role_permission'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
+

@@ -7,8 +7,9 @@ GPL-3.0 license ©2022
 import logging
 import secrets
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
+from wallet_friend_services import AuthService
 
 """
 HTTP server config.
@@ -22,18 +23,11 @@ latest_version = api_versions[-1]
 
 
 @app.route(f"/{latest_version}/auth", methods=["POST"])
-def auth():
-    try:
-        return {"msg": "Service Unavailable"}, 503
-    except Exception as e:
-        logging.exception(e)
-        return {"error_code": 500, "error_desc": "Internal Server Error"}, 500
-
-
-@app.route(f"/{latest_version}/auth", methods=["GET"])
 def check_authorization():
     try:
-        return {"msg": "Service Unavailable"}, 503
+        result = AuthService(request).auth_user_service(secret_key)
+        return result, 200
+        # return {}, 200
     except Exception as e:
         logging.exception(e)
         return {"error_code": 500, "error_desc": "Internal Server Error"}, 500

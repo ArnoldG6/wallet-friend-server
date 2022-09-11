@@ -10,7 +10,8 @@ import secrets
 from flask import Flask, request
 from flask_cors import CORS
 
-from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException
+from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException, \
+    ServiceUnavailableException
 from wallet_friend_services import AuthService
 
 """
@@ -23,12 +24,29 @@ app.secret_key = secret_key
 api_versions = ["v1.0"]
 latest_version = api_versions[-1]
 
-
-@app.route(f"/{latest_version}/users/auth", methods=["POST"])
-def check_authorization():
+"""
+================================================User web services================================================
+"""
+@app.route(f"/{latest_version}/users/authenticate", methods=["POST"])
+def authenticate():
     try:
         result = AuthService(request).auth_user_service(secret_key)
         return result, 200
+
+    except HttpWalletFriendException as e:
+        logging.error(e)
+        return e.json(), e.get_code()
+
+    except Exception as e:
+        logging.error(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
+
+
+@app.route(f"/{latest_version}/users/check-authentication", methods=["POST"])
+def check_authentication():
+    try:
+        raise ServiceUnavailableException
 
     except HttpWalletFriendException as e:
         logging.error(e)

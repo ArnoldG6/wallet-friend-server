@@ -46,5 +46,5 @@ class AuthService:
             else:
                 raise Exception("Expired request exception")
         except Exception as e:
-            logging.exception(e)
+            logging.error(e)
             raise e

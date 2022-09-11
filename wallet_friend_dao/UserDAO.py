@@ -84,12 +84,12 @@ class UserDAO(GenericDAO):
                 }
                 access_token = jwt.encode(payload, secret_key, algorithm="HS256")
                 return {"access_token": access_token, "user": u}
-            except NoResultFound:
-                # Password or username is incorrect.
-                logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+            except NoResultFound as e:
+                # Password or username is incorrect or in fact username does not exist.
+                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
                 raise NotAuthorizedException()
             except Exception as e:  # Any other Exception
-                logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
                 raise NotAuthorizedException()
         except Exception as e:
             raise e

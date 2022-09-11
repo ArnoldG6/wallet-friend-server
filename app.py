@@ -31,11 +31,11 @@ def check_authorization():
         return result, 200
 
     except WalletFriendException as e:
-        logging.exception(e)
+        logging.error(e)
         return e.json(), e.get_code()
 
     except Exception as e:
-        logging.exception(e)
+        logging.error(e)
         e = InternalException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 

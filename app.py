@@ -9,6 +9,8 @@ import secrets
 
 from flask import Flask, request
 from flask_cors import CORS
+
+from wallet_friend_exceptions.WalletFriendExceptions import InternalException, WalletFriendException
 from wallet_friend_services import AuthService
 
 """
@@ -27,9 +29,15 @@ def check_authorization():
     try:
         result = AuthService(request).auth_user_service(secret_key)
         return result, 200
+
+    except WalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+
     except Exception as e:
         logging.exception(e)
-        return {"error_code": 500, "error_desc": "Internal Server Error"}, 500
+        e = InternalException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 
 def start_development_server():

@@ -8,8 +8,12 @@ from __future__ import annotations
 import logging
 import time
 import jwt
+import sqlalchemy
 
+from wallet_friend_exceptions.WalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
+    MalformedRequestException
 from .GenericDAO import GenericDAO
+from sqlalchemy.orm.exc import NoResultFound
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_entities import User
 from wallet_friend_tools import check_non_empty_non_spaces_string
@@ -41,7 +45,7 @@ class UserDAO(GenericDAO):
     def auth_user(self, user_auth_dto: UserAuthDTO, secret_key: str) -> dict or None:
         """
         Parameters:
-            secret_key(str):
+            param secret_key: key used to generate the JWT along the payload.
             param user_auth_dto:  Valid DTO Input data.
         Returns:
             dict: an authorized User object.
@@ -56,18 +60,20 @@ class UserDAO(GenericDAO):
         pwd = user_auth_dto.password
         try:
             if not check_non_empty_non_spaces_string(pwd):
-                raise Exception("Invalid parameter 'pwd' exception")
+                raise MalformedRequestException("Invalid parameter 'pwd' exception")
             if not check_non_empty_non_spaces_string(username):
-                raise Exception("Invalid parameter 'username' exception")
+                raise MalformedRequestException("Invalid parameter 'username' exception")
             if not check_non_empty_non_spaces_string(secret_key):
-                raise Exception("Invalid parameter 'secret_key' exception")
+                raise MalformedRequestException("Invalid parameter 'secret_key' exception")
             session = self.get_session()
             logging.info(f"DB Connection requested by user: '{username}' is established.")
             try:
                 filters = (((User.username == username) | (User.email == username)) & (User.pwd_hash == pwd))
                 u = self.get_session().query(User).filter(filters).one()
                 if not u:
-                    raise Exception("Not authorized.")
+                    raise NotAuthorizedException()
+                if not u.enabled:  # If user is disabled.
+                    raise DisabledUserException()
                 expiration_time = 604800  # 604800s = 7 days.
                 now = int(time.time())
                 payload = {
@@ -78,12 +84,15 @@ class UserDAO(GenericDAO):
                 }
                 access_token = jwt.encode(payload, secret_key, algorithm="HS256")
                 return {"access_token": access_token, "user": u}
-            except Exception as e:
+            except NoResultFound:
+                # Password or username is incorrect.
                 logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
-                raise Exception("Not authorized")
+                raise NotAuthorizedException()
+            except Exception as e:  # Any other Exception
+                logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+                raise NotAuthorizedException()
         except Exception as e:
             raise e
         finally:
             if session:
                 logging.info(f"DB Connection requested by user: '{username}' closed.")
-

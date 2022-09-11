@@ -11,6 +11,7 @@ class WalletFriendException(BaseException):
     """
     Custom base Exception class for HTTP error responses.
     """
+
     def __init__(self, message: str or None = "", error_code: int or None = None):
         self.__message = message
         self.__error_code = error_code
@@ -28,14 +29,25 @@ class WalletFriendException(BaseException):
         return self.__message
 
 
-class MalformedRequest(WalletFriendException):
-    def __init__(self):
-        super().__init__("Incorrect content.", 400)
+class MalformedRequestException(WalletFriendException):
+    def __init__(self, message: str = None):
+        """
+        :param message: Custom user message.
+        """
+        if not message:
+            super().__init__("Incorrect content sent in request-JSON body.", 400)
+        else:
+            super().__init__(message, 400)
 
 
 class NotAuthorizedException(WalletFriendException):
     def __init__(self):
         super().__init__("Authentication failure.", 401)
+
+
+class DisabledUserException(WalletFriendException):
+    def __init__(self):
+        super().__init__("User is disabled. Contact your administrator.", 401)
 
 
 class ForbiddenException(WalletFriendException):

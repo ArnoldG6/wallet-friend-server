@@ -12,7 +12,7 @@ import pydantic
 from pydantic import BaseModel, validator
 
 from wallet_friend_dto.RoleDTO import RoleDetailsDTO
-from wallet_friend_exceptions.WalletFriendExceptions import MalformedRequestException
+from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
 """
@@ -48,7 +48,7 @@ class UserDetailsDTO(BaseModel):
     username: str
     email: str
     first_name: str
-    last_name: str  # Last name does not require validation.
+    last_name: str  # Last name does not require validation because not everyone got a last name.
     enabled: bool
     creation_datetime: datetime
     roles: list
@@ -73,10 +73,3 @@ class UserDetailsDTO(BaseModel):
             return v
         raise MalformedRequestException("Invalid value for parameter 'first_name'")
 
-    """
-    @validator("roles")
-    def validate_roles(cls, v):
-        if v:  # Not empty list.
-            return v
-        raise ValueError("User's roles cannot be empty.")
-    """

@@ -6,11 +6,8 @@ GPL-3.0 license ©2022
 """
 from __future__ import annotations
 
-from typing import List
-
-from pydantic import parse_obj_as
 from wallet_friend_dto import UserDetailsDTO
-from wallet_friend_entities import User, Permission, Role
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_mappers.RoleMapper import RoleMapper
 
 
@@ -33,7 +30,7 @@ class UserMapper:
     def __init__(self):
         super().__init__()
         if UserMapper.user_mapper_singleton is not None:
-            raise Exception("Singleton Class Exception")
+            raise SingletonObjectException()
         else:
             UserMapper.user_mapper_singleton = self
 

@@ -14,8 +14,9 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_entities import User
-from wallet_friend_exceptions.WalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
+from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from .DAO import DAO
 
@@ -39,7 +40,7 @@ class UserDAO(DAO):
     def __init__(self):
         super().__init__()
         if UserDAO.__user_dao_singleton is not None:
-            raise Exception("Singleton Class Exception")
+            raise SingletonObjectException()
         else:
             UserDAO.__user_dao_singleton = self
 

@@ -6,12 +6,7 @@ GPL-3.0 license ©2022
 """
 from __future__ import annotations
 
-from typing import List
-
-from pydantic import parse_obj_as
-from wallet_friend_dto import UserDetailsDTO
 from wallet_friend_dto.RoleDTO import RoleDetailsDTO
-from wallet_friend_entities import User, Role, Role, Permission
 from wallet_friend_mappers.PermissionMapper import PermissionMapper
 
 
@@ -39,10 +34,22 @@ class RoleMapper:
             RoleMapper.role_mapper_singleton = self
 
     def role_to_role_details_dto(self, role):
+        """
+        Params:
+            role: Role object to be translated.
+        Returns:
+            RoleDetailsDTO object.
+        """
         role_d = role.dict_rep()
         role_d["permissions"] = PermissionMapper.get_instance(). \
             permission_list_to_permission_details_dto_list(role_d["permissions"])
         return RoleDetailsDTO(**role_d)
 
     def role_list_to_role_details_dto_list(self, role_list):
+        """
+        Params:
+            role_list: List of Role objects to be translated.
+        Returns:
+            A list of RoleDetailsDTO objects.
+        """
         return [self.role_to_role_details_dto(r) for r in role_list]

@@ -4,14 +4,11 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
-import datetime
-import json
 import logging
 
 from pydantic.error_wrappers import ValidationError
 
 from wallet_friend_dto import UserAuthDTO
-from wallet_friend_entities import User, Permission
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
 
@@ -38,7 +35,7 @@ def test_user_auth_dto_1():
                 logging.info(f"({a},{b}): {UserAuthDTO(username=a, password=b).json()}")
                 successful_cases += 1
             except ValidationError as e:
-                print(e)
+                logging.exception(e)
         assert successful_cases != 2
     except Exception as e:
         logging.exception(e)

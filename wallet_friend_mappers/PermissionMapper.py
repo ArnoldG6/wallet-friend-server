@@ -38,7 +38,19 @@ class PermissionMapper:
             PermissionMapper.permission_mapper_singleton = self
 
     def permission_to_permission_details_dto(self, permission):
+        """
+        Params:
+            permission: Permission object to be translated.
+        Returns:
+            PermissionDetailsDTO object.
+        """
         return PermissionDetailsDTO(**permission.__dict__)
 
     def permission_list_to_permission_details_dto_list(self, permission_list):
+        """
+        Params:
+            permission_list: List of Permission objects to be translated.
+        Returns:
+            A list of PermissionDetailsDTO objects.
+        """
         return parse_obj_as(List[PermissionDetailsDTO], [p.__dict__ for p in permission_list])

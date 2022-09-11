@@ -11,7 +11,9 @@ from flask import request as f_request
 
 from wallet_friend_dao import UserDAO
 from wallet_friend_dto import UserAuthDTO
-from wallet_friend_exceptions.WalletFriendExceptions import MalformedRequestException
+from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException, ExpiredRequestException, \
+    InternalServerException
+from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
 from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
@@ -24,7 +26,7 @@ class AuthService:
 
     def __init__(self, request: f_request):
         if request is None:
-            raise Exception("Expired request exception")
+            raise ExpiredRequestException()
         self.__request = request
 
     def auth_user_service(self, secret_key: str) -> dict:  # []
@@ -38,9 +40,9 @@ class AuthService:
                     "access_token": access_token
                 }
         """
-        if not check_non_empty_non_spaces_string(secret_key):
-            raise Exception("Invalid parameter 'secret_key' exception")
         try:
+            if not check_non_empty_non_spaces_string(secret_key):
+                raise IncorrectParameterValueException("Invalid parameter 'secret_key' exception")
             if self.__request is not None:
                 try:
                     result = UserDAO.get_instance().auth_user(UserAuthDTO(**self.__request.get_json()), secret_key)
@@ -50,7 +52,7 @@ class AuthService:
                 except pydantic.error_wrappers.ValidationError:
                     raise MalformedRequestException()
             else:
-                raise Exception("Expired request exception")
+                raise ExpiredRequestException()
         except Exception as e:
             logging.error(e)
-            raise e
+            raise InternalServerException()

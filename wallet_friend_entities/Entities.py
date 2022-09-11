@@ -28,6 +28,7 @@ class User(Base):
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     enabled = Column(Boolean, nullable=False)
+    token = Column(String(256), nullable=True)
     # ===Role relationship===
     # M to M.
     roles = relationship('Role', secondary='t_user_role', back_populates='users')
@@ -62,6 +63,7 @@ class Permission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     creation_datetime = Column(DateTime, nullable=False)
     name = Column(String(50), nullable=False, unique=True)
+    description = Column(String(150), nullable=True)
     roles = relationship('Role', secondary='t_role_permission', back_populates='permissions')
 
 
@@ -83,3 +85,4 @@ class RolePermission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
+

@@ -39,8 +39,8 @@ class AuthService:
             raise Exception("Invalid parameter 'secret_key' exception")
         try:
             if self.__request is not None:
-                result = UserDAO.get_instance().auth_user(UserAuthDTO(**self.__request.get_json()), secret_key)
-                print(result["user"].dict_rep())
+                a = UserAuthDTO(**self.__request.get_json())
+                result = UserDAO.get_instance().auth_user(a, secret_key)
                 result["user"] = UserDetailsDTO(**result["user"].dict_rep())  # Converts User to UserDetailsDTO
                 return result
             else:

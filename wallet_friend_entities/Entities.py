@@ -83,4 +83,3 @@ class RolePermission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
-

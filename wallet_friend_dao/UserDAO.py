@@ -66,6 +66,8 @@ class UserDAO(GenericDAO):
             try:
                 filters = (((User.username == username) | (User.email == username)) & (User.pwd_hash == pwd))
                 u = self.get_session().query(User).filter(filters).one()
+                if not u:
+                    raise Exception("Not authorized.")
                 expiration_time = 604800  # 604800s = 7 days.
                 now = int(time.time())
                 payload = {

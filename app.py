@@ -22,12 +22,11 @@ api_versions = ["v1.0"]
 latest_version = api_versions[-1]
 
 
-@app.route(f"/{latest_version}/auth", methods=["POST"])
+@app.route(f"/{latest_version}/users/auth", methods=["POST"])
 def check_authorization():
     try:
         result = AuthService(request).auth_user_service(secret_key)
         return result, 200
-        # return {}, 200
     except Exception as e:
         logging.exception(e)
         return {"error_code": 500, "error_desc": "Internal Server Error"}, 500

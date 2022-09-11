@@ -11,7 +11,7 @@ from typing import List
 import pydantic
 from pydantic import BaseModel, validator
 
-from wallet_friend_entities import Role
+from wallet_friend_dto.RoleDTO import RoleDetailsDTO
 from wallet_friend_exceptions.WalletFriendExceptions import MalformedRequestException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
@@ -51,7 +51,7 @@ class UserDetailsDTO(BaseModel):
     last_name: str  # Last name does not require validation.
     enabled: bool
     creation_datetime: datetime
-    roles: List[Role] = []
+    roles: list
 
     @validator("username")
     def validate_username(cls, v):

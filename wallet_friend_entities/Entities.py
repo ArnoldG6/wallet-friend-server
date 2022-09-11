@@ -33,11 +33,6 @@ class User(Base):
     # M to M.
     roles = relationship('Role', secondary='t_user_role', back_populates='users')
 
-    def dict_rep(self):
-        result = super().__dict__
-        result["roles"] = self.roles
-        return result
-
 
 @pydantic.dataclasses.dataclass
 class Role(Base):
@@ -55,6 +50,11 @@ class Role(Base):
     # ===Users relationship===
     # M to M.
     users = relationship('User', secondary='t_user_role', back_populates='roles')
+
+    def dict_rep(self):
+        result = self.__dict__
+        result["permissions"] = self.permissions
+        return result
 
 
 @pydantic.dataclasses.dataclass
@@ -85,4 +85,3 @@ class RolePermission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
-

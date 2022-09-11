@@ -12,12 +12,12 @@ from sqlalchemy.orm import sessionmaker
 from wallet_friend_db import DbSettingsParser
 
 
-class GenericDAO:
+class DAO:
     db_settings_path = "wallet_friend_db/config.ini"
 
     def __init__(self):
         self.__default_profile = "local_postgresql"
-        self.__db_settings = DbSettingsParser.get_instance().read_db_config(filename=GenericDAO.db_settings_path,
+        self.__db_settings = DbSettingsParser.get_instance().read_db_config(filename=DAO.db_settings_path,
                                                                             section=self.__default_profile)
         self.__db_string = f"postgresql://{self.__db_settings['user']}:{self.__db_settings['password']}@{self.__db_settings['host']}:{self.__db_settings['port']}/{self.__db_settings['database']}"
         self.__engine = create_engine(self.__db_string)

@@ -6,10 +6,13 @@ GPL-3.0 license ©2022
 """
 import logging
 
+import pydantic
 from flask import request as f_request
 
 from wallet_friend_dao import UserDAO
-from wallet_friend_dto import UserAuthDTO, UserDetailsDTO
+from wallet_friend_dto import UserAuthDTO
+from wallet_friend_exceptions.WalletFriendExceptions import MalformedRequestException
+from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
 
@@ -39,10 +42,13 @@ class AuthService:
             raise Exception("Invalid parameter 'secret_key' exception")
         try:
             if self.__request is not None:
-                a = UserAuthDTO(**self.__request.get_json())
-                result = UserDAO.get_instance().auth_user(a, secret_key)
-                result["user"] = UserDetailsDTO(**result["user"].dict_rep())  # Converts User to UserDetailsDTO
-                return result
+                try:
+                    result = UserDAO.get_instance().auth_user(UserAuthDTO(**self.__request.get_json()), secret_key)
+                    result["user"] = UserMapper.get_instance(). \
+                        user_to_user_details_dto(result["user"])  # Converts User to UserDetailsDTO
+                    return result
+                except pydantic.error_wrappers.ValidationError:
+                    raise MalformedRequestException()
             else:
                 raise Exception("Expired request exception")
         except Exception as e:

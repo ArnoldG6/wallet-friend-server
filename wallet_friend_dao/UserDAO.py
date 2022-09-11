@@ -5,21 +5,22 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 from __future__ import annotations
+
 import logging
 import time
-import jwt
-import sqlalchemy
 
-from wallet_friend_exceptions.WalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
-    MalformedRequestException
-from .GenericDAO import GenericDAO
+import jwt
 from sqlalchemy.orm.exc import NoResultFound
+
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_entities import User
+from wallet_friend_exceptions.WalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
+    MalformedRequestException
 from wallet_friend_tools import check_non_empty_non_spaces_string
+from .DAO import DAO
 
 
-class UserDAO(GenericDAO):
+class UserDAO(DAO):
     """
     DBHandler class  manages the mqd_db queries in order to use CRUD methods.
     """

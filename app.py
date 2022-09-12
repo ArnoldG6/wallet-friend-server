@@ -29,7 +29,7 @@ latest_version = api_versions[-1]
 """
 
 
-@app.route(f"/{latest_version}/api/users/authenticate", methods=["POST"])
+@app.route(f"/api/{latest_version}/users/authenticate", methods=["POST"])
 def users_authenticate():
     try:
         return AuthService(request).auth_user_service(secret_key), 200
@@ -43,7 +43,7 @@ def users_authenticate():
         return e.json(), e.get_code()
 
 
-@app.route(f"/{latest_version}/api/users/register", methods=["POST"])
+@app.route(f"/api/{latest_version}/users/register", methods=["POST"])
 def users_register():
     try:
         return AuthService(request).register_user_service(), 200

@@ -19,6 +19,10 @@ from wallet_friend_tools import check_non_empty_non_spaces_string
 =============================================User-related DTOs.=============================================
 """
 
+"""
+==========================Input DTOs.==========================
+"""
+
 
 class UserAuthDTO(BaseModel):
     """
@@ -38,6 +42,39 @@ class UserAuthDTO(BaseModel):
         if check_non_empty_non_spaces_string(v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'password'")
+
+
+class UserRegisterDTO(BaseModel):
+    """
+    Input DTO for user registration.
+    """
+
+    username: str  # Username or email.
+    password: str  # NOT Sha-256 hashed password.
+    email: str
+    first_name: str
+    last_name: str
+
+
+    @validator("email")
+    def validate_email(cls, v):
+        # Email pattern regex.
+        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if check_non_empty_non_spaces_string(v) and re.fullmatch(email_pattern, v):
+            return v
+        raise MalformedRequestException("Invalid value for parameter 'email'")
+
+
+"""
+==========================Output DTOs.==========================
+"""
+
+
+@pydantic.dataclasses.dataclass(frozen=True)
+class UserDetailsDTO(BaseModel):
+    """
+    Output DTO for displaying user information.
+    """
 
 
 @pydantic.dataclasses.dataclass(frozen=True)
@@ -72,4 +109,3 @@ class UserDetailsDTO(BaseModel):
         if check_non_empty_non_spaces_string(v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'first_name'")
-

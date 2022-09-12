@@ -13,10 +13,11 @@ import jwt
 from sqlalchemy.orm.exc import NoResultFound
 
 from wallet_friend_dto import UserAuthDTO
+from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException
-from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException, ExistentEntityException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from .DAO import DAO
 
@@ -76,6 +77,8 @@ class UserDAO(DAO):
                     raise NotAuthorizedException()
                 if not u.enabled:  # If user is disabled.
                     raise DisabledUserException()
+                if u.token:
+                    return {"access_token": u.token, "user": u}
                 expiration_time = 604800  # 604800s = 7 days.
                 now = int(time.time())
                 payload = {
@@ -84,8 +87,9 @@ class UserDAO(DAO):
                     "iat": now,
                     "exp": now + expiration_time
                 }
-                access_token = jwt.encode(payload, secret_key, algorithm="HS256")
-                return {"access_token": access_token, "user": u}
+                u.token = jwt.encode(payload, secret_key, algorithm="HS256")
+                self.get_session().commit()
+                return {"access_token": u.token, "user": u}
             except NoResultFound as e:
                 # Password or username is incorrect or in fact username does not exist.
                 logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
@@ -98,3 +102,43 @@ class UserDAO(DAO):
         finally:
             if session:
                 logging.info(f"DB Connection requested by user: '{username}' closed.")
+
+    def register_user(self, new_user: User) -> User:
+        """
+        Parameters:
+            param new_user: User made from client's input and validated by UserRegisterDTO.
+        Returns:
+            User: Freshly-created and registered user.
+        """
+        session = None
+        try:
+            if not new_user:
+                raise MalformedRequestException("Invalid parameter 'new_user' exception")
+            username = new_user.username
+            email = new_user.email
+            session = self.get_session()
+            logging.info(f"DB Connection requested by user: '{username}' is established.")
+            try:
+                """
+                filters = ((User.username == username) | (User.email == email))
+                u = self.get_session().query(User).filter(filters).one()
+                if u is not None:
+                    if u.email == new_user.email:
+                        raise ExistentEntityException("Invalid parameter 'email' exception")
+                    if u.username == new_user.username:
+                        raise ExistentEntityException("Invalid parameter 'username' exception")
+                self.get_session().commit()
+                return user
+                """
+            except Exception as e:  # Any other Exception
+                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+                raise NotAuthorizedException()
+        except Exception as e:
+            raise e
+        finally:
+            if session:
+                logging.info(f"DB Connection requested by user: '{username}' closed.")
+
+
+
+

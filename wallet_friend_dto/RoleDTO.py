@@ -12,6 +12,11 @@ from pydantic import BaseModel
 from wallet_friend_dto.PermissionDTO import PermissionDetailsDTO
 
 
+"""
+==========================Output DTOs.==========================
+"""
+
+
 @pydantic.dataclasses.dataclass(frozen=True)
 class RoleDetailsDTO(BaseModel):
     """

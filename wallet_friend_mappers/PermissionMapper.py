@@ -36,6 +36,9 @@ class PermissionMapper:
             raise Exception("Singleton Class Exception")
         else:
             PermissionMapper.permission_mapper_singleton = self
+    """
+    ==========================Outer-purpose-mapping.==========================
+    """
 
     def permission_to_permission_details_dto(self, permission):
         """

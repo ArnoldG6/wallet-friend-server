@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from configparser import ConfigParser
 
+from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
+
 
 class DbSettingsParser:
     """
@@ -27,7 +29,7 @@ class DbSettingsParser:
 
     def __init__(self):
         if DbSettingsParser.__db_settings_parser_singleton is not None:
-            raise Exception("Singleton Class Exception")
+            raise IncorrectParameterValueException("Singleton Class Exception")
         else:
             DbSettingsParser.__db_settings_parser_singleton = self
 
@@ -41,4 +43,4 @@ class DbSettingsParser:
             for item in items:
                 db_settings_dict[item[0]] = item[1]
             return db_settings_dict
-        raise Exception(f"Section: '{section}' not found in '{filename}'.")
+        raise IncorrectParameterValueException(f"Section: '{section}' not found in '{filename}'.")

@@ -31,3 +31,12 @@ class SingletonObjectException(WalletFriendException):
         super().__init__("Singleton Object Exception.")
 
 
+class ExistentEntityException(WalletFriendException):
+    def __init__(self, message: str = None):
+        """
+        :param message: Custom user message.
+        """
+        if not message:
+            super().__init__("Data already exists.")
+        else:
+            super().__init__(message)

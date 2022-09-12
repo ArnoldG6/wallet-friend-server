@@ -33,6 +33,10 @@ class RoleMapper:
         else:
             RoleMapper.role_mapper_singleton = self
 
+    """
+    ==========================Outer-purpose-mapping.==========================
+    """
+
     def role_to_role_details_dto(self, role):
         """
         Params:

@@ -7,6 +7,7 @@ GPL-3.0 license ©2022
 from __future__ import annotations
 
 from wallet_friend_dto import UserDetailsDTO
+from wallet_friend_entities import User
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_mappers.RoleMapper import RoleMapper
 
@@ -34,10 +35,21 @@ class UserMapper:
         else:
             UserMapper.user_mapper_singleton = self
 
+    """
+    ==========================Outer-purpose-mapping.==========================
+    """
+
     def user_to_user_details_dto(self, u):
         user_d = u.__dict__
         user_d["roles"] = RoleMapper.get_instance().role_list_to_role_details_dto_list(u.roles)
         return UserDetailsDTO(**user_d)
 
+    """
+    ==========================Input-purpose-mapping.==========================
+    """
 
-
+    def user_register_dto_to_user(self, user_register_dto):
+        u = User()
+        for k, v in user_register_dto.dict().items():
+            u.__dict__[k] = v
+        return u

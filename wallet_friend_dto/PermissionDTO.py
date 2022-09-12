@@ -8,6 +8,10 @@ GPL-3.0 license ©2022
 import pydantic
 from pydantic import BaseModel
 
+"""
+==========================Output DTOs.==========================
+"""
+
 
 @pydantic.dataclasses.dataclass(frozen=True)
 class PermissionDetailsDTO(BaseModel):

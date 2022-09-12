@@ -25,10 +25,12 @@ api_versions = ["v1.0"]
 latest_version = api_versions[-1]
 
 """
-================================================User web services================================================
+==============================================SO User web services==================================================
 """
-@app.route(f"/{latest_version}/users/authenticate", methods=["POST"])
-def authenticate():
+
+
+@app.route(f"/{latest_version}/api/users/authenticate", methods=["POST"])
+def users_authenticate():
     try:
         result = AuthService(request).auth_user_service(secret_key)
         return result, 200
@@ -43,11 +45,14 @@ def authenticate():
         return e.json(), e.get_code()
 
 
-@app.route(f"/{latest_version}/users/check-authentication", methods=["POST"])
-def check_authentication():
+@app.route(f"/{latest_version}/api/users/register", methods=["POST"])
+def users_register():
     try:
-        raise ServiceUnavailableException
-
+        """
+        result = AuthService(request).register_user_service()
+        return result, 200
+        """
+        raise ServiceUnavailableException()
     except HttpWalletFriendException as e:
         logging.error(e)
         return e.json(), e.get_code()
@@ -56,6 +61,11 @@ def check_authentication():
         logging.error(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
+
+
+"""
+================================================EO User web services================================================
+"""
 
 
 def start_development_server():

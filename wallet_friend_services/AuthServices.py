@@ -11,6 +11,7 @@ from flask import request as f_request
 
 from wallet_friend_dao import UserDAO
 from wallet_friend_dto import UserAuthDTO
+from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException, ExpiredRequestException, \
     InternalServerException
 from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
@@ -56,3 +57,19 @@ class AuthService:
         except Exception as e:
             logging.error(e)
             raise InternalServerException()
+
+    def register_user_service(self):
+        try:
+            if self.__request is not None:
+                try:
+                    user = UserMapper.get_instance(). \
+                        user_register_dto_to_user(UserRegisterDTO(**self.__request.get_json()))
+                    return {"xd": 1}
+                except pydantic.error_wrappers.ValidationError:
+                    raise MalformedRequestException()
+            else:
+                raise ExpiredRequestException()
+        except Exception as e:
+            logging.error(e)
+            raise InternalServerException()
+

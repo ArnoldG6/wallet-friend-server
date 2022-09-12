@@ -14,7 +14,6 @@ import jwt
 from sqlalchemy.orm.exc import NoResultFound
 
 from wallet_friend_dto import UserAuthDTO
-from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException, ExistentEntityException

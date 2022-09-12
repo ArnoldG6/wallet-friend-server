@@ -14,7 +14,7 @@ def start_server():
     Gunicorn WSGI Server startup.
     """
     logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
-    app.run(host="0.0.0.0", port=81, threaded=True)  # Port 80 For HTTP.
+    app.run(host="0.0.0.0", port=82, threaded=True)  # Port 80 For HTTP.
 
 
 if __name__ == "__main__":

@@ -33,34 +33,29 @@ latest_version = api_versions[-1]
 @app.route(f"/{latest_version}/api/users/authenticate", methods=["POST"])
 def users_authenticate():
     try:
-        return make_response(AuthService(request).auth_user_service(secret_key), 200), {"Access-Control-Allow"
-                                                                                        "-Origin": "*"}
-
-
+        return AuthService(request).auth_user_service(secret_key), 200, {"Access-Control-Allow-Origin": "*"}
     except HttpWalletFriendException as e:
         logging.error(e)
-        return e.json(), e.get_code()
+        return e.json(), e.get_code(), {"Access-Control-Allow-Origin": "*"}
 
     except BaseException as e:
         logging.error(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
-        return e.json(), e.get_code()
+        return e.json(), e.get_code(), {"Access-Control-Allow-Origin": "*"}
 
 
 @app.route(f"/{latest_version}/api/users/register", methods=["POST"])
 def users_register():
     try:
-        response = make_response(AuthService(request).register_user_service(), 200)
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
+        return AuthService(request).register_user_service(), 200,  {"Access-Control-Allow-Origin": "*"}
     except HttpWalletFriendException as e:
         logging.error(e)
-        return e.json(), e.get_code()
+        return e.json(), e.get_code(), {"Access-Control-Allow-Origin": "*"}
 
     except BaseException as e:
         logging.error(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
-        return e.json(), e.get_code()
+        return e.json(), e.get_code(),  {"Access-Control-Allow-Origin": "*"}
 
 
 """

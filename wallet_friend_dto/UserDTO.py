@@ -55,7 +55,6 @@ class UserRegisterDTO(BaseModel):
     first_name: str
     last_name: str
 
-
     @validator("email")
     def validate_email(cls, v):
         # Email pattern regex.

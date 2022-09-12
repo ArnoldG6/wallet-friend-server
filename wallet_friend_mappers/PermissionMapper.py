@@ -6,12 +6,14 @@ GPL-3.0 license ©2022
 """
 from __future__ import annotations
 
+import logging
 from typing import List
 
 from pydantic import parse_obj_as
 from wallet_friend_dto import UserDetailsDTO
 from wallet_friend_dto.PermissionDTO import PermissionDetailsDTO
 from wallet_friend_entities import User, Permission, Role
+from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 
 
 class PermissionMapper:
@@ -47,7 +49,11 @@ class PermissionMapper:
         Returns:
             PermissionDetailsDTO object.
         """
-        return PermissionDetailsDTO(**permission.__dict__)
+        try:
+            return PermissionDetailsDTO(**permission.__dict__)
+        except MalformedRequestException as e:
+            logging.error(e)
+            raise e
 
     def permission_list_to_permission_details_dto_list(self, permission_list):
         """
@@ -56,4 +62,9 @@ class PermissionMapper:
         Returns:
             A list of PermissionDetailsDTO objects.
         """
-        return parse_obj_as(List[PermissionDetailsDTO], [p.__dict__ for p in permission_list])
+        try:
+            return parse_obj_as(List[PermissionDetailsDTO], [p.__dict__ for p in permission_list])
+
+        except MalformedRequestException as e:
+            logging.error(e)
+            raise e

@@ -50,7 +50,11 @@ class AuthService:
                     result["user"] = UserMapper.get_instance(). \
                         user_to_user_details_dto(result["user"])  # Converts User to UserDetailsDTO
                     return result
-                except pydantic.error_wrappers.ValidationError:
+                except pydantic.error_wrappers.ValidationError as e:
+                    logging.error(e)
+                    raise MalformedRequestException()
+                except ValueError as e:
+                    logging.error(e)
                     raise MalformedRequestException()
             else:
                 raise ExpiredRequestException()
@@ -59,17 +63,27 @@ class AuthService:
             raise InternalServerException()
 
     def register_user_service(self):
+        """
+        Returns:
+            UserDetailsDTO object of the new registered user.
+        """
         try:
             if self.__request is not None:
                 try:
-                    user = UserMapper.get_instance(). \
+                    new_user = UserMapper.get_instance(). \
                         user_register_dto_to_user(UserRegisterDTO(**self.__request.get_json()))
-                    return {"xd": 1}
-                except pydantic.error_wrappers.ValidationError:
+                    return {
+                        "user": UserMapper.get_instance().
+                        user_to_user_details_dto(UserDAO.get_instance().register_user(new_user))
+                    }
+                except ValueError as e:
+                    logging.error(e)
                     raise MalformedRequestException()
+                except Exception as e:
+                    logging.error(e)
+                    raise e
             else:
                 raise ExpiredRequestException()
         except Exception as e:
             logging.error(e)
-            raise InternalServerException()
-
+            raise e

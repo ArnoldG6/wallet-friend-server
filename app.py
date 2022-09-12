@@ -32,14 +32,13 @@ latest_version = api_versions[-1]
 @app.route(f"/{latest_version}/api/users/authenticate", methods=["POST"])
 def users_authenticate():
     try:
-        result = AuthService(request).auth_user_service(secret_key)
-        return result, 200
+        return AuthService(request).auth_user_service(secret_key), 200
 
     except HttpWalletFriendException as e:
         logging.error(e)
         return e.json(), e.get_code()
 
-    except Exception as e:
+    except BaseException as e:
         logging.error(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
@@ -48,16 +47,12 @@ def users_authenticate():
 @app.route(f"/{latest_version}/api/users/register", methods=["POST"])
 def users_register():
     try:
-        """
-        result = AuthService(request).register_user_service()
-        return result, 200
-        """
-        raise ServiceUnavailableException()
+        return AuthService(request).register_user_service(), 200
     except HttpWalletFriendException as e:
         logging.error(e)
         return e.json(), e.get_code()
 
-    except Exception as e:
+    except BaseException as e:
         logging.error(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()

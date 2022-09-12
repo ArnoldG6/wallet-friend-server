@@ -21,7 +21,7 @@ class HttpWalletFriendException(WalletFriendException):
     def json(self):
         return json.dumps({
             "code": self.__error_code,
-            "description": self.__message
+            "message": self.__message
         })
 
     def get_code(self):
@@ -38,6 +38,17 @@ class MalformedRequestException(HttpWalletFriendException):
         """
         if not message:
             super().__init__("Incorrect content sent in request-JSON body.", 400)
+        else:
+            super().__init__(message, 400)
+
+
+class ExistentEntityException(HttpWalletFriendException):
+    def __init__(self, message: str = None):
+        """
+        :param message: Custom user message.
+        """
+        if not message:
+            super().__init__("Data already exists.", 400)
         else:
             super().__init__(message, 400)
 

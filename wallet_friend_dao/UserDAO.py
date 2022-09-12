@@ -6,6 +6,7 @@ GPL-3.0 license ©2022
 """
 from __future__ import annotations
 
+import datetime
 import logging
 import time
 
@@ -16,8 +17,8 @@ from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
-    MalformedRequestException
-from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException, ExistentEntityException
+    MalformedRequestException, ExistentEntityException
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from .DAO import DAO
 
@@ -117,28 +118,26 @@ class UserDAO(DAO):
             username = new_user.username
             email = new_user.email
             session = self.get_session()
-            logging.info(f"DB Connection requested by user: '{username}' is established.")
+            filters = ((User.username == username) | (User.email == email))
             try:
-                """
-                filters = ((User.username == username) | (User.email == email))
-                u = self.get_session().query(User).filter(filters).one()
+                u = self.get_session().query(User).filter(filters).one()  # Searching for a repeated instance.
                 if u is not None:
                     if u.email == new_user.email:
-                        raise ExistentEntityException("Invalid parameter 'email' exception")
+                        raise ExistentEntityException("Existent 'email' exception")
                     if u.username == new_user.username:
-                        raise ExistentEntityException("Invalid parameter 'username' exception")
-                self.get_session().commit()
-                return user
-                """
-            except Exception as e:  # Any other Exception
-                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
-                raise NotAuthorizedException()
-        except Exception as e:
+                        raise ExistentEntityException("Existent 'username' exception")
+            except NoResultFound as e:
+                pass  # If entity was not found program shall continue normally.
+            new_user.creation_datetime = datetime.datetime.now()
+            new_user.pwd_hash = new_user.password  # Field name change.
+            new_user.enabled = True
+            new_user.roles = []
+            self.get_session().add(new_user)
+            self.get_session().commit()
+            return new_user
+        except ExistentEntityException as e:
+            logging.error(e)
             raise e
-        finally:
-            if session:
-                logging.info(f"DB Connection requested by user: '{username}' closed.")
-
-
-
-
+        except Exception as e:  # Any other Exception
+            logging.error(f"DB Connection failed. Details: {e}")
+            raise e

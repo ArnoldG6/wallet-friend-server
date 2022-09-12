@@ -33,9 +33,9 @@ latest_version = api_versions[-1]
 @app.route(f"/{latest_version}/api/users/authenticate", methods=["POST"])
 def users_authenticate():
     try:
-        response = make_response(AuthService(request).auth_user_service(secret_key), 200)
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
+        return make_response(AuthService(request).auth_user_service(secret_key), 200), {"Access-Control-Allow"
+                                                                                        "-Origin": "*"}
+
 
     except HttpWalletFriendException as e:
         logging.error(e)

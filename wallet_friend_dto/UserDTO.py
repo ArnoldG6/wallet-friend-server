@@ -63,6 +63,14 @@ class UserRegisterDTO(BaseModel):
             return v
         raise MalformedRequestException("Invalid value for parameter 'email'")
 
+    @validator("password")
+    def validate_password(cls, v):
+        # Email pattern regex.
+        pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$"
+        if re.fullmatch(pwd_pattern, v):
+            return v
+        raise MalformedRequestException("Invalid value for parameter 'password'")
+
 
 """
 ==========================Output DTOs.==========================

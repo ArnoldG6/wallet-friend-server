@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import datetime
 import logging
+import re
 import time
+import hashlib
 
 import jwt
 from sqlalchemy.orm.exc import NoResultFound
@@ -127,8 +129,14 @@ class UserDAO(DAO):
                         raise ExistentEntityException("Existent 'username' exception")
             except NoResultFound as e:
                 pass  # If entity was not found program shall continue normally.
+
+            pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$"
+
+            if not re.fullmatch(pwd_pattern, new_user.password):
+                raise MalformedRequestException("Invalid value for parameter 'password'")
+            # Field name change and SHA256 hashing
+            new_user.pwd_hash = hashlib.sha256(new_user.password.encode('utf-8')).hexdigest()
             new_user.creation_datetime = datetime.datetime.now()
-            new_user.pwd_hash = new_user.password  # Field name change.
             new_user.enabled = True
             new_user.roles = []
             self.get_session().add(new_user)

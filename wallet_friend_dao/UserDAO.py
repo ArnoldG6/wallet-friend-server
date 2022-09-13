@@ -130,7 +130,7 @@ class UserDAO(DAO):
             except NoResultFound as e:
                 pass  # If entity was not found program shall continue normally.
 
-            pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$"
+            pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[$&+,:;=?@#|'<>.^*()%!-,]).{8,}$"
 
             if not re.fullmatch(pwd_pattern, new_user.password):
                 raise MalformedRequestException("Invalid value for parameter 'password'")

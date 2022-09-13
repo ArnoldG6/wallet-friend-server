@@ -46,7 +46,8 @@ def users_authenticate():
 @app.route(f"/api/{latest_version}/users/register", methods=["POST"])
 def users_register():
     try:
-        return AuthService(request).register_user_service(), 200
+        AuthService(request).register_user_service()
+        return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.error(e)
         return e.json(), e.get_code()

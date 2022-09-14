@@ -51,15 +51,15 @@ class AuthService:
                         user_to_user_details_dto(result["user"])  # Converts User to UserDetailsDTO
                     return result
                 except pydantic.error_wrappers.ValidationError as e:
-                    logging.error(e)
+                    logging.exception(e)
                     raise MalformedRequestException()
                 except ValueError as e:
-                    logging.error(e)
+                    logging.exception(e)
                     raise MalformedRequestException()
             else:
                 raise ExpiredRequestException()
         except Exception as e:
-            logging.error(e)
+            logging.exception(e)
             raise InternalServerException()
 
     def register_user_service(self):
@@ -77,16 +77,16 @@ class AuthService:
                         user_to_user_details_dto(UserDAO.get_instance().register_user(new_user))
                     }
                 except ValueError as e:
-                    logging.error(e)
+                    logging.exception(e)
                     raise MalformedRequestException()
                 except ExistentEntityException as e:
-                    logging.error(e)
+                    logging.exception(e)
                     raise e
                 except Exception as e:
-                    logging.error(e)
+                    logging.exception(e)
                     raise e
             else:
                 raise ExpiredRequestException()
         except Exception as e:
-            logging.error(e)
+            logging.exception(e)
             raise e

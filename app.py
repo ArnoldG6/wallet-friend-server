@@ -34,11 +34,11 @@ def users_authenticate():
     try:
         return AuthService(request).auth_user_service(secret_key), 200
     except HttpWalletFriendException as e:
-        logging.error(e)
+        logging.exception(e)
         return e.json(), e.get_code(),
 
     except BaseException as e:
-        logging.error(e)
+        logging.exception(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 
@@ -49,11 +49,11 @@ def users_register():
         AuthService(request).register_user_service()
         return {"success": True}, 200
     except HttpWalletFriendException as e:
-        logging.error(e)
+        logging.exception(e)
         return e.json(), e.get_code()
 
     except BaseException as e:
-        logging.error(e)
+        logging.exception(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 
@@ -63,10 +63,10 @@ def users_reset_password():
         AuthService(request).reset_password_service()
         return {"success": True}, 201
     except HttpWalletFriendException as e:
-        logging.error(e)
+        logging.exception(e)
         return e.json(), e.get_code()
     except BaseException as e:
-        logging.error(e)
+        logging.exception(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 

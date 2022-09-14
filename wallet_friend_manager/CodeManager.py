@@ -39,7 +39,7 @@ class CodeManager:
                 code_dictionary = json.load(openfile)
                 return code_dictionary
         except Exception as e:  # Any Exception
-            logging.error(f"Reading File Failed. Details: {e}")
+            logging.exception(f"Reading File Failed. Details: {e}")
             raise e
 
     @staticmethod
@@ -57,5 +57,5 @@ class CodeManager:
                 json.dump(users, file_object)
             return random_number
         except Exception as e:  # Any Exception
-            logging.error(f"Writing File Failed. Details: {e}")
+            logging.exception(f"Writing File Failed. Details: {e}")
             raise e

@@ -46,7 +46,7 @@ class EmailManager:
             server.sendmail(EMAIL_ADDRESS, user.email, message)
             server.quit()
         except Exception as e:  # Any Exception
-            logging.error(f"Email Creation Failed. Details: {e}")
+            logging.exception(f"Email Creation Failed. Details: {e}")
             raise e
 
     def send_change_password(self, user):

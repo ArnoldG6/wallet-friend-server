@@ -10,10 +10,11 @@ import logging
 
 from wallet_friend_dto.RoleDTO import RoleDetailsDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
+from wallet_friend_mappers.Mapper import Mapper
 from wallet_friend_mappers.PermissionMapper import PermissionMapper
 
 
-class RoleMapper:
+class RoleMapper(Mapper):
     """
     RoleMapper translate RoleDTO objects into Role objects and vice-versa.
     """
@@ -53,7 +54,7 @@ class RoleMapper:
                 permission_list_to_permission_details_dto_list(role_d["permissions"])
             return RoleDetailsDTO(**role_d)
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e
 
     def role_list_to_role_details_dto_list(self, role_list):
@@ -66,5 +67,5 @@ class RoleMapper:
         try:
             return [self.role_to_role_details_dto(r) for r in role_list]
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e

@@ -36,7 +36,7 @@ class UserAuthDTO(BaseModel):
     @validator("username")
     def validate_username(cls, v):
         if check_non_empty_non_spaces_string(v):
-            return v
+            return v.lower()
         raise MalformedRequestException("Invalid value in JSON body.")
 
     @validator("password")
@@ -57,11 +57,17 @@ class UserRegisterDTO(BaseModel):
     first_name: str
     last_name: str
 
+    @validator("username")
+    def validate_username(cls, v):
+        if check_non_empty_non_spaces_string(v):
+            return v.lower()
+        raise MalformedRequestException("Invalid value for parameter 'username'")
+
     @validator("email")
     def validate_email(cls, v):
         # Email pattern regex.
         if check_non_empty_non_spaces_string(v) and re.fullmatch(default_email_pattern(), v):
-            return v
+            return v.lower()
         raise MalformedRequestException("Invalid value for parameter 'email'")
 
     @validator("password")
@@ -75,13 +81,6 @@ class UserRegisterDTO(BaseModel):
 """
 ==========================Output DTOs.==========================
 """
-
-
-@pydantic.dataclasses.dataclass(frozen=True)
-class UserDetailsDTO(BaseModel):
-    """
-    Output DTO for displaying user information.
-    """
 
 
 @pydantic.dataclasses.dataclass(frozen=True)

@@ -95,10 +95,10 @@ class UserDAO(DAO):
                 return {"access_token": u.token, "user": u}
             except NoResultFound as e:
                 # Password or username is incorrect or in fact username does not exist.
-                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+                logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
                 raise NotAuthorizedException()
             except Exception as e:  # Any other Exception
-                logging.error(f"DB Connection requested by user: '{username}' failed. Details: {e}")
+                logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
                 raise NotAuthorizedException()
         except Exception as e:
             raise e
@@ -117,10 +117,8 @@ class UserDAO(DAO):
         try:
             if not new_user:
                 raise MalformedRequestException("Invalid parameter 'new_user' exception")
-            username = new_user.username
-            email = new_user.email
             session = self.get_session()
-            filters = ((User.username == username) | (User.email == email))
+            filters = ((User.username == new_user.username) | (User.email == new_user.email))
             try:
                 u = self.get_session().query(User).filter(filters).one()  # Searching for a repeated instance.
                 if u is not None:
@@ -136,16 +134,18 @@ class UserDAO(DAO):
             # Field name change and SHA256 hashing
             new_user.pwd_hash = hashlib.sha256(new_user.password.encode('utf-8')).hexdigest()
             new_user.creation_datetime = datetime.datetime.now()
+            new_user.username = new_user.username.lower()
+            new_user.email = new_user.email.lower()
             new_user.enabled = True
             new_user.roles = []
             self.get_session().add(new_user)
             self.get_session().commit()
             return new_user
         except ExistentEntityException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e
         except Exception as e:  # Any other Exception
-            logging.error(f"DB Connection failed. Details: {e}")
+            logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
     def search_user_by_email(self, email: str):
@@ -162,5 +162,5 @@ class UserDAO(DAO):
                 raise NotAuthorizedException()
             return user_result
         except Exception as e:
-            logging.error(f"DB Connection failed. Details: {e}")
+            logging.exception(f"DB Connection failed. Details: {e}")
             raise e

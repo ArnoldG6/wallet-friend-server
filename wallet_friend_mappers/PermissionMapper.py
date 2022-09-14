@@ -14,9 +14,10 @@ from wallet_friend_dto import UserDetailsDTO
 from wallet_friend_dto.PermissionDTO import PermissionDetailsDTO
 from wallet_friend_entities import User, Permission, Role
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
+from wallet_friend_mappers.Mapper import Mapper
 
 
-class PermissionMapper:
+class PermissionMapper(Mapper):
     """
     PermissionMapper translate PermissionDTO objects into User objects and vice-versa.
     """
@@ -52,7 +53,7 @@ class PermissionMapper:
         try:
             return PermissionDetailsDTO(**permission.__dict__)
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e
 
     def permission_list_to_permission_details_dto_list(self, permission_list):
@@ -66,5 +67,5 @@ class PermissionMapper:
             return parse_obj_as(List[PermissionDetailsDTO], [p.__dict__ for p in permission_list])
 
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e

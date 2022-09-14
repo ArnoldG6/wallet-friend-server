@@ -12,10 +12,11 @@ from wallet_friend_dto import UserDetailsDTO
 from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers.Mapper import Mapper
 from wallet_friend_mappers.RoleMapper import RoleMapper
 
 
-class UserMapper:
+class UserMapper(Mapper):
     """
     UserMapper translate UserDTO objects into User objects and vice-versa.
     """
@@ -49,7 +50,7 @@ class UserMapper:
             return UserDetailsDTO(**user_d)
 
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e
 
     """
@@ -62,8 +63,8 @@ class UserMapper:
             u.__dict__ = u.__dict__ | user_register_dto.dict()
             return u
         except ValueError as e:
-            logging.error(e)
+            logging.exception(e)
             raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
-            logging.error(e)
+            logging.exception(e)
             raise e

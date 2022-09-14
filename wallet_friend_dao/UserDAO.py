@@ -20,6 +20,7 @@ from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException, ExistentEntityException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_settings import default_password_pattern
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from .DAO import DAO
 
@@ -130,9 +131,7 @@ class UserDAO(DAO):
             except NoResultFound as e:
                 pass  # If entity was not found program shall continue normally.
 
-            pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[$&+,:;=?@#|'<>.^*()%!-,]).{8,}$"
-
-            if not re.fullmatch(pwd_pattern, new_user.password):
+            if not re.fullmatch(default_password_pattern(), new_user.password):
                 raise MalformedRequestException("Invalid value for parameter 'password'")
             # Field name change and SHA256 hashing
             new_user.pwd_hash = hashlib.sha256(new_user.password.encode('utf-8')).hexdigest()

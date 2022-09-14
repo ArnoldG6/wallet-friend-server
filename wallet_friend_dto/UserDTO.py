@@ -13,6 +13,8 @@ from pydantic import BaseModel, validator
 
 from wallet_friend_dto.RoleDTO import RoleDetailsDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
+from wallet_friend_settings import default_password_pattern
+from wallet_friend_settings.settings import default_email_pattern
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
 """
@@ -39,7 +41,7 @@ class UserAuthDTO(BaseModel):
 
     @validator("password")
     def validate_pwd(cls, v):
-        if check_non_empty_non_spaces_string(v):
+        if re.fullmatch(default_password_pattern(), v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'password'")
 
@@ -58,16 +60,14 @@ class UserRegisterDTO(BaseModel):
     @validator("email")
     def validate_email(cls, v):
         # Email pattern regex.
-        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        if check_non_empty_non_spaces_string(v) and re.fullmatch(email_pattern, v):
+        if check_non_empty_non_spaces_string(v) and re.fullmatch(default_email_pattern(), v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'email'")
 
     @validator("password")
     def validate_password(cls, v):
         # Email pattern regex.
-        pwd_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[$&+,:;=?@#|'<>.^*()%!-,]).{8,}$"
-        if re.fullmatch(pwd_pattern, v):
+        if re.fullmatch(default_password_pattern(), v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'password'")
 
@@ -106,8 +106,7 @@ class UserDetailsDTO(BaseModel):
     @validator("email")
     def validate_email(cls, v):
         # Email pattern regex.
-        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        if check_non_empty_non_spaces_string(v) and re.fullmatch(email_pattern, v):
+        if check_non_empty_non_spaces_string(v) and re.fullmatch(default_email_pattern(), v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'email'")
 

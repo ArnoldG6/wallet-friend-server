@@ -1,0 +1,24 @@
+import json
+import random
+
+
+def write_code(username):
+    obj = read_codes()
+    random_number = random.randint(10000000, 99999999)
+    while random_number in obj.values():
+        random_number = random.randint(10000000, 99999999)
+    obj[username] = random_number
+    with open("sample.json", "w") as outfile:
+        json.dump(obj, outfile)
+
+
+def read_codes():
+    with open('sample.json', 'r') as openfile:
+        # Reading from json file
+        json_object = json.load(openfile)
+        print(json_object)
+        print(type(json_object))
+        return json_object
+
+write_code("ARNOLD612")
+read_codes()

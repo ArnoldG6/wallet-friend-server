@@ -57,6 +57,18 @@ def users_register():
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 
+@app.route(f"/api/{latest_version}/users/reset_password", methods=["POST"])
+def users_reset_password():
+    try:
+        AuthService(request).reset_password_service()
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.error(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.error(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 """
 ================================================EO User web services================================================

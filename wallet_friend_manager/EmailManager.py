@@ -6,15 +6,16 @@ GPL-3.0 license ©2022
 """
 import os
 import smtplib
+import logging
 
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_entities.Entities import User
 
 EMAIL_ADDRESS = 'walletfriendofficial@outlook.com'
 EMAIL_PASSWORD = '!QAZ2wsx#EDC'
 
 
 class EmailManager:
-
     __email_manager_singleton = None  # Singleton EmailManager object
 
     def __init__(self):
@@ -33,20 +34,20 @@ class EmailManager:
             EmailManager.__email_manager_singleton = EmailManager()
         return EmailManager.__email_manager_singleton
 
-    def send_reset_password(self, user, code):
-        subject = 'Wallet Friend User Reset Password'
-        message = 'Hello {fName} {lName}, this is a email from Wallet Friend Support account to reset your password. ' \
-                  'You must access the following link: {uCode}'.format(fName=user.first_name,
-                                                                       lName=user.last_name,
-                                                                       uCode=code)
-        message = 'Subject: {}\n\n{}'.format(subject, message)
-        server = smtplib.SMTP('smtp-mail.outlook.com', 587)
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        server.sendmail(EMAIL_ADDRESS, user.email, message)
-        server.quit()
+    def send_reset_password(self, user: User, code: str):
+        try:
+            subject = 'Wallet Friend User Reset Password'
+            message = f'Hello {user.first_name} {user.last_name}, this is a email from Wallet Friend Support account to reset your password. ' \
+                      f'You must access the following link: {code}'
+            message = 'Subject: {}\n\n{}'.format(subject, message)
+            server = smtplib.SMTP('smtp-mail.outlook.com', 587)
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_ADDRESS, user.email, message)
+            server.quit()
+        except Exception as e:  # Any Exception
+            logging.error(f"Email Creation Failed. Details: {e}")
+            raise e
 
-    def send_change_password(self,user):
+    def send_change_password(self, user):
         pass
-
-

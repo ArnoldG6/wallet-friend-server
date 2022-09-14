@@ -148,3 +148,20 @@ class UserDAO(DAO):
         except Exception as e:  # Any other Exception
             logging.error(f"DB Connection failed. Details: {e}")
             raise e
+
+    def search_user_by_email(self, email: str):
+        """
+        Parameters:
+            param email: email to search user.
+        Returns:
+            User: Exisitng user.
+        """
+        try:
+            filters = (User.email == email)
+            user_result = self.get_session().query(User).filter(filters).one()
+            if not user_result:
+                raise NotAuthorizedException()
+            return user_result
+        except Exception as e:
+            logging.error(f"DB Connection failed. Details: {e}")
+            raise e

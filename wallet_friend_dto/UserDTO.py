@@ -37,13 +37,13 @@ class UserAuthDTO(BaseModel):
     def validate_username(cls, v):
         if check_non_empty_non_spaces_string(v):
             return v
-        raise MalformedRequestException("Invalid value for parameter 'username'")
+        raise MalformedRequestException("Invalid value in JSON body.")
 
     @validator("password")
     def validate_pwd(cls, v):
-        if re.fullmatch(default_password_pattern(), v):
+        if check_non_empty_non_spaces_string(v):
             return v
-        raise MalformedRequestException("Invalid value for parameter 'password'")
+        raise MalformedRequestException("Invalid value in JSON body.")
 
 
 class UserRegisterDTO(BaseModel):

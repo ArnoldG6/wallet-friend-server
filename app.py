@@ -47,7 +47,7 @@ def users_authenticate():
 def users_register():
     try:
         AuthService(request).register_user_service()
-        return {"success": True}, 201
+        return {"success": True}, 200
     except HttpWalletFriendException as e:
         logging.error(e)
         return e.json(), e.get_code()

@@ -138,6 +138,8 @@ class UserDAO(DAO):
             new_user.email = new_user.email.lower()
             new_user.enabled = True
             new_user.roles = []
+            new_user.first_name = new_user.first_name.title()
+            new_user.last_name = new_user.last_name.title()
             self.get_session().add(new_user)
             self.get_session().commit()
             return new_user

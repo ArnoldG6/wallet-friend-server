@@ -77,6 +77,18 @@ class UserRegisterDTO(BaseModel):
             return v
         raise MalformedRequestException("Invalid value for parameter 'password'")
 
+    @validator("first_name")
+    def validate_first_name(cls, v):
+        if check_non_empty_non_spaces_string(v):
+            return v.title()
+        raise MalformedRequestException("Invalid value for parameter 'first_name'")
+
+    @validator("last_name")
+    def validate_last_name(cls, v):
+        if check_non_empty_non_spaces_string(v):
+            return v.title()
+        raise MalformedRequestException("Invalid value for parameter 'last_name'")
+
 
 """
 ==========================Output DTOs.==========================
@@ -114,3 +126,9 @@ class UserDetailsDTO(BaseModel):
         if check_non_empty_non_spaces_string(v):
             return v
         raise MalformedRequestException("Invalid value for parameter 'first_name'")
+
+    @validator("last_name")
+    def validate_last_name(cls, v):
+        if check_non_empty_non_spaces_string(v):
+            return v
+        raise MalformedRequestException("Invalid value for parameter 'last_name'")

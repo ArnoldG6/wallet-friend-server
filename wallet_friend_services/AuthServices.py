@@ -13,7 +13,7 @@ from wallet_friend_dao import UserDAO
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException, ExpiredRequestException, \
-    InternalServerException, ExistentRecordException, NotAuthorizedException
+    ExistentRecordException, NotAuthorizedException
 from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
 from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_tools import check_non_empty_non_spaces_string

@@ -37,7 +37,7 @@ class MalformedRequestException(HttpWalletFriendException):
         :param message: Custom user message.
         """
         if not message:
-            super().__init__("Incorrect content sent in request-JSON body.", 400)
+            super().__init__("Malformed request.", 400)
         else:
             super().__init__(message, 400)
 

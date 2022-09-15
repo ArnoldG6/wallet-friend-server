@@ -52,6 +52,9 @@ class UserMapper(Mapper):
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
 
     """
     ==========================Input-purpose-mapping.==========================
@@ -68,3 +71,6 @@ class UserMapper(Mapper):
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()

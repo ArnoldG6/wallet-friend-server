@@ -42,7 +42,7 @@ class MalformedRequestException(HttpWalletFriendException):
             super().__init__(message, 400)
 
 
-class ExistentEntityException(HttpWalletFriendException):
+class ExistentRecordException(HttpWalletFriendException):
     def __init__(self, message: str = None):
         """
         :param message: Custom user message.
@@ -53,9 +53,27 @@ class ExistentEntityException(HttpWalletFriendException):
             super().__init__(message, 400)
 
 
+class NonExistentRecordException(HttpWalletFriendException):
+    def __init__(self, message: str = None):
+        """
+        :param message: Custom user message.
+        """
+        if not message:
+            super().__init__("Data does not exists.", 400)
+        else:
+            super().__init__(message, 400)
+
+
 class NotAuthorizedException(HttpWalletFriendException):
-    def __init__(self):
-        super().__init__("Authentication failure.", 401)
+
+    def __init__(self, message: str = None):
+        """
+        :param message: Custom user message.
+        """
+        if not message:
+            super().__init__("Authentication failure.", 401)
+        else:
+            super().__init__(message, 401)
 
 
 class DisabledUserException(HttpWalletFriendException):

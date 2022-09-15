@@ -4,6 +4,7 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
+import datetime
 import os
 import smtplib
 import logging
@@ -37,7 +38,7 @@ class EmailManager:
     def send_reset_password(self, user: User, code: str):
         try:
             subject = 'Wallet Friend User Reset Password'
-            message = f'Hello {user.first_name} {user.last_name}, this is a email from Wallet Friend Support account to reset your password. ' \
+            message = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to reset your password. ' \
                       f'You must access the following link: {code}'
             message = 'Subject: {}\n\n{}'.format(subject, message)
             server = smtplib.SMTP('smtp-mail.outlook.com', 587)
@@ -49,5 +50,17 @@ class EmailManager:
             logging.exception(f"Email Creation Failed. Details: {e}")
             raise e
 
-    def send_change_password(self, user):
-        pass
+    def send_change_password(self, user: User):
+        try:
+            subject = 'Wallet Friend Changed User Password'
+            message = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to notify a change of password. ' \
+                      f'Password has been changed on {(datetime.now()).strftime("%d/%m/%Y, %H:%M:%S")}'
+            message = 'Subject: {}\n\n{}'.format(subject, message)
+            server = smtplib.SMTP('smtp-mail.outlook.com', 587)
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_ADDRESS, user.email, message)
+            server.quit()
+        except Exception as e:  # Any Exception
+            logging.exception(f"Email Creation Failed. Details: {e}")
+            raise e

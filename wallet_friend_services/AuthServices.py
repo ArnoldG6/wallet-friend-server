@@ -9,12 +9,14 @@ import logging
 import pydantic
 from flask import request as f_request
 
+from app import latest_version
 from wallet_friend_dao import UserDAO
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException, ExpiredRequestException, \
     ExistentRecordException, NotAuthorizedException
 from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
+from wallet_friend_manager import CodeManager, EmailManager
 from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
@@ -121,4 +123,26 @@ class AuthService:
                 raise ExpiredRequestException()
         except BaseException as e:
             logging.exception(e)
+            raise e
+
+    def reset_password_service(self):
+        try:
+            if self.__request is not None:
+                self.__request.ge
+                email = 'sample@email.com' # Retrieve user email from session is missing to do
+                user = UserDAO.get_instance().search_user_by_email(email)
+                number_reset = CodeManager.get_instance().add_code(user)
+                link_reset = f"/api/{latest_version}/users/reset_password/{number_reset}"
+                EmailManager.get_instance().send_reset_password(user, link_reset)
+            #Adding more specific ex is missing to do
+        except Exception as e:
+            logging.error(e)
+            raise e
+
+    def change_password_service(self):
+        try:
+            pass
+
+        except Exception as e:
+            logging.error(e)
             raise e

@@ -196,3 +196,20 @@ class UserDAO(DAO):
         except Exception as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+
+    def search_user_by_username(self, username: str):
+        """
+        Parameters:
+            param username: usermame to search user.
+        Returns:
+            User: Existing user.
+        """
+        try:
+            filters = (User.username == username)
+            user_result = self.get_session().query(User).filter(filters).one()
+            if not user_result:
+                raise NonExistentRecordException()
+            return user_result
+        except Exception as e:
+            logging.exception(f"DB Connection failed. Details: {e}")
+            raise e

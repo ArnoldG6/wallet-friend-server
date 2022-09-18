@@ -9,7 +9,6 @@ import logging
 import pydantic
 from flask import request as f_request
 
-from app import latest_version
 from wallet_friend_dao import UserDAO
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.UserDTO import UserRegisterDTO
@@ -125,14 +124,14 @@ class AuthService:
             logging.exception(e)
             raise e
 
-    def reset_password_service(self):
+    def reset_password_service(self, latestVersion : int):
         try:
             if self.__request is not None:
                 self.__request.ge
                 email = 'sample@email.com' # Retrieve user email from session is missing to do
                 user = UserDAO.get_instance().search_user_by_email(email)
                 number_reset = CodeManager.get_instance().add_code(user)
-                link_reset = f"/api/{latest_version}/users/reset_password/{number_reset}"
+                link_reset = f"/api/{latestVersion}/users/reset_password/{number_reset}"
                 EmailManager.get_instance().send_reset_password(user, link_reset)
             #Adding more specific ex is missing to do
         except Exception as e:

@@ -74,7 +74,7 @@ def users_check_authorization(username):
 @app.route(f"/api/{latest_version}/users/reset_password", methods=["POST"])
 def users_reset_password():
     try:
-        AuthService(request).reset_password_service()
+        AuthService(request).reset_password_service(latest_version)
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

@@ -71,7 +71,7 @@ class UserDAO(DAO):
                 raise MalformedRequestException("Invalid parameter 'username' exception")
             if not check_non_empty_non_spaces_string(secret_key):
                 raise MalformedRequestException("Invalid parameter 'secret_key' exception")
-            session = self.get_session()
+            session = self.create_session()
             logging.info(f"DB Connection requested by user: '{username}' is established.")
             try:
                 filters = (((User.username == username) | (User.email == username)) & (User.pwd_hash == pwd))
@@ -118,7 +118,7 @@ class UserDAO(DAO):
         try:
             if not new_user:
                 raise MalformedRequestException("Invalid parameter 'new_user' exception")
-            session = self.get_session()
+            session = self.create_session()
             filters = ((User.username == new_user.username) | (User.email == new_user.email))
             try:
                 u = session.query(User).filter(filters).one()  # Searching for a repeated instance.
@@ -168,7 +168,7 @@ class UserDAO(DAO):
             if not token:
                 raise MalformedRequestException("Invalid parameter 'token' exception")
             try:
-                session = self.get_session()
+                session = self.create_session()
                 u = session.query(User).filter((User.username == username)).one()  # Searching for an
                 # existent instance.
                 if u.token and u.token == token:  # If token is not expired.
@@ -197,7 +197,7 @@ class UserDAO(DAO):
         """
         session = None
         try:
-            session = self.get_session()
+            session = self.create_session()
             filters = (User.email == email)
             user_result = session.query(User).filter(filters).one()
             if not user_result:
@@ -219,7 +219,7 @@ class UserDAO(DAO):
         """
         session = None
         try:
-            session = self.get_session()
+            session = self.create_session()
             filters = (User.username == username)
             user_result = session.query(User).filter(filters).one()
             if not user_result:

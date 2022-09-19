@@ -4,6 +4,7 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
+import logging
 
 from sqlalchemy import create_engine
 from sqlalchemy.exc import PendingRollbackError
@@ -14,7 +15,6 @@ from wallet_friend_db import DbSettingsParser
 
 class DAO:
     db_settings_path = "wallet_friend_db/config.ini"
-
     def __init__(self):
         self.__session = None
         self.__default_profile = "local_postgresql"
@@ -22,7 +22,6 @@ class DAO:
                                                                             section=self.__default_profile)
         self.__db_string = f"postgresql://{self.__db_settings['user']}:{self.__db_settings['password']}@{self.__db_settings['host']}:{self.__db_settings['port']}/{self.__db_settings['database']}"
         self.__engine = create_engine(self.__db_string)
-        # self.__session = sessionmaker(bind=self.__engine)()
 
     @staticmethod
     def get_instance():
@@ -31,16 +30,8 @@ class DAO:
     def get_db_settings(self):
         return self.__db_settings
 
-    def get_session(self):
-        self.__session = sessionmaker(bind=self.__engine)()
+    def create_session(self):
         try:
-            self.__session.commit()  # Refreshes any remote change on DB
-        except PendingRollbackError as e:
-            self.__session.rollback()
-            self.__session.commit()  # Refreshes any remote change on DB
+            return sessionmaker(bind=self.__engine)()  # Session shall be closed from outside
         except BaseException as e:
-            pass
-        return self.__session
-
-    def close_session(self):
-        self.__session.close()
+            logging.exception(e)

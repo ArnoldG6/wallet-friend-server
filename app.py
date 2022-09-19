@@ -71,6 +71,7 @@ def users_check_authorization(username):
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
 
+
 @app.route(f"/api/{latest_version}/users/reset_password", methods=["POST"])
 def users_reset_password():
     try:

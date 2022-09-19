@@ -36,6 +36,8 @@ class DAO:
         except PendingRollbackError as e:
             self.__session.rollback()
             self.__session.commit()  # Refreshes any remote change on DB
+        except BaseException as e:
+            pass
         return self.__session
 
     def close_session(self):

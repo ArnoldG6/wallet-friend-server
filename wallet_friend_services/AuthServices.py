@@ -96,15 +96,15 @@ class AuthService:
         """
         try:
             if not username:
-                raise IncorrectParameterValueException("Invalid path parameter 'username' exception")
+                raise MalformedRequestException("Invalid path parameter 'username' exception")
             if self.__request is not None:
                 try:
                     if self.__request.headers["Authorization"] is None:
-                        raise IncorrectParameterValueException("Invalid path parameter 'token'")
+                        raise MalformedRequestException("Invalid path parameter 'token'")
                     auth_token = self.__request.headers["Authorization"].split()
                     # Auth token comes in format: "Bearer xxxxx....."
-                    if len(auth_token) != 2 and not auth_token[-1]:
-                        raise IncorrectParameterValueException("Invalid path parameter 'token'")
+                    if len(auth_token) != 2 or not auth_token[-1] or auth_token[-1] == "null":
+                        raise MalformedRequestException("Invalid path parameter 'token'")
                     # No UserDTO-mapping is required.
 
                     user = UserDAO.get_instance().check_authorization_by_username(username, auth_token[-1])
@@ -112,7 +112,7 @@ class AuthService:
                 except NotAuthorizedException as e:
                     logging.exception(e)
                     raise e
-                except IncorrectParameterValueException as e:
+                except MalformedRequestException as e:
                     logging.exception(e)
                     raise e
                 except BaseException as e:

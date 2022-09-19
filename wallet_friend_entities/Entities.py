@@ -5,7 +5,7 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 import pydantic
-from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean,create_engine
+from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -85,10 +85,3 @@ class RolePermission(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
-
-# Warning!: Run only once when you need to create the DB.
-db_string = "postgresql://e89db34874f8a3e18aff2c149d35eed83b50bcce294983021855fd751a7" \
-            ":57dc776594d12466b45b1765c001fb390cecd0ba03f91506b00d7a2e42e@localhost:5432" \
-            "/d453b9b4c616f9899e4fa08a8f726cbcbbc1b898318b62d2c5af23098c57"
-db = create_engine(db_string)
-Base.metadata.create_all(db, Base.metadata.tables.values())

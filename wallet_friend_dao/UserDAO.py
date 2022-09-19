@@ -75,7 +75,7 @@ class UserDAO(DAO):
             logging.info(f"DB Connection requested by user: '{username}' is established.")
             try:
                 filters = (((User.username == username) | (User.email == username)) & (User.pwd_hash == pwd))
-                u = self.get_session().query(User).filter(filters).one()
+                u = session.query(User).filter(filters).one()
                 if not u:
                     raise NotAuthorizedException()
                 if not u.enabled:  # If user is disabled.
@@ -91,7 +91,7 @@ class UserDAO(DAO):
                     "exp": now + expiration_time
                 }
                 u.token = jwt.encode(payload, secret_key, algorithm="HS256")
-                self.get_session().commit()
+                session.commit()
                 return {"access_token": u.token, "user": u}
             except NoResultFound as e:
                 # Password or username is incorrect or in fact username does not exist.
@@ -104,6 +104,7 @@ class UserDAO(DAO):
             raise e
         finally:
             if session:
+                session.close()
                 logging.info(f"DB Connection requested by user: '{username}' closed.")
 
     def register_user(self, new_user: User) -> None:
@@ -120,7 +121,7 @@ class UserDAO(DAO):
             session = self.get_session()
             filters = ((User.username == new_user.username) | (User.email == new_user.email))
             try:
-                u = self.get_session().query(User).filter(filters).one()  # Searching for a repeated instance.
+                u = session.query(User).filter(filters).one()  # Searching for a repeated instance.
                 if u is not None:
                     if u.email == new_user.email:
                         raise ExistentRecordException("Existent 'email' exception")
@@ -140,14 +141,17 @@ class UserDAO(DAO):
             new_user.roles = []
             new_user.first_name = new_user.first_name.title()
             new_user.last_name = new_user.last_name.title()
-            self.get_session().add(new_user)
-            self.get_session().commit()
+            session.add(new_user)
+            session.commit()
         except ExistentRecordException as e:
             logging.exception(e)
             raise e
         except Exception as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()
 
     def check_authorization_by_username(self, username, token) -> User:
         """
@@ -157,6 +161,7 @@ class UserDAO(DAO):
         Returns:
             User: Freshly-created and registered user.
         """
+        session = None
         try:
             if not username:
                 raise MalformedRequestException("Invalid parameter 'username' exception")
@@ -164,7 +169,7 @@ class UserDAO(DAO):
                 raise MalformedRequestException("Invalid parameter 'token' exception")
             try:
                 session = self.get_session()
-                u = self.get_session().query(User).filter((User.username == username)).one()  # Searching for an
+                u = session.query(User).filter((User.username == username)).one()  # Searching for an
                 # existent instance.
                 if u.token and u.token == token:  # If token is not expired.
                     return u  # If the user is found successfully AND both tokens are equal.
@@ -179,6 +184,9 @@ class UserDAO(DAO):
         except BaseException as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()
 
     def search_user_by_email(self, email: str):
         """
@@ -187,29 +195,39 @@ class UserDAO(DAO):
         Returns:
             User: Existing user.
         """
+        session = None
         try:
+            session = self.get_session()
             filters = (User.email == email)
-            user_result = self.get_session().query(User).filter(filters).one()
+            user_result = session.query(User).filter(filters).one()
             if not user_result:
                 raise NonExistentRecordException()
             return user_result
         except Exception as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()
 
     def search_user_by_username(self, username: str):
         """
         Parameters:
-            param username: usermame to search user.
+            param username: username to search user.
         Returns:
             User: Existing user.
         """
+        session = None
         try:
+            session = self.get_session()
             filters = (User.username == username)
-            user_result = self.get_session().query(User).filter(filters).one()
+            user_result = session.query(User).filter(filters).one()
             if not user_result:
                 raise NonExistentRecordException()
             return user_result
         except Exception as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()

@@ -5,7 +5,7 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 import pydantic
-from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean
+from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean,create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -31,7 +31,7 @@ class User(Base):
     token = Column(String(256), nullable=True)
     # ===Role relationship===
     # M to M.
-    roles = relationship('Role', secondary='t_user_role', back_populates='users')
+    roles = relationship('Role', secondary='t_user_role', back_populates='users', lazy='subquery')
 
 
 @pydantic.dataclasses.dataclass
@@ -46,10 +46,10 @@ class Role(Base):
     creation_datetime = Column(DateTime, nullable=False)
     # ===Permissions relationship===
     # M to M.
-    permissions = relationship('Permission', secondary='t_role_permission', back_populates='roles')
+    permissions = relationship('Permission', secondary='t_role_permission', back_populates='roles', lazy='subquery')
     # ===Users relationship===
     # M to M.
-    users = relationship('User', secondary='t_user_role', back_populates='roles')
+    users = relationship('User', secondary='t_user_role', back_populates='roles', lazy='subquery')
 
     def dict_rep(self):
         result = self.__dict__
@@ -64,7 +64,7 @@ class Permission(Base):
     creation_datetime = Column(DateTime, nullable=False)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(150), nullable=True)
-    roles = relationship('Role', secondary='t_role_permission', back_populates='permissions')
+    roles = relationship('Role', secondary='t_role_permission', back_populates='permissions', lazy='subquery')
 
 
 class UserRole(Base):
@@ -86,4 +86,9 @@ class RolePermission(Base):
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
 
-
+# Warning!: Run only once when you need to create the DB.
+db_string = "postgresql://e89db34874f8a3e18aff2c149d35eed83b50bcce294983021855fd751a7" \
+            ":57dc776594d12466b45b1765c001fb390cecd0ba03f91506b00d7a2e42e@localhost:5432" \
+            "/d453b9b4c616f9899e4fa08a8f726cbcbbc1b898318b62d2c5af23098c57"
+db = create_engine(db_string)
+Base.metadata.create_all(db, Base.metadata.tables.values())

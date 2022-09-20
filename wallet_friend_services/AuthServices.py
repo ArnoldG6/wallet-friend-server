@@ -124,16 +124,15 @@ class AuthService:
             logging.exception(e)
             raise e
 
-    def reset_password_service(self, latestVersion : int):
+    def reset_password_service(self, latest_version: str):
         try:
             if self.__request is not None:
-                self.__request.ge
-                email = 'sample@email.com' # Retrieve user email from session is missing to do
+                email = self.__request.get_json()['email']
                 user = UserDAO.get_instance().search_user_by_email(email)
                 number_reset = CodeManager.get_instance().add_code(user)
-                link_reset = f"/api/{latestVersion}/users/reset_password/{number_reset}"
+                link_reset = f"/api/{latest_version}/users/reset_password/{number_reset}"
                 EmailManager.get_instance().send_reset_password(user, link_reset)
-            #Adding more specific ex is missing to do
+            # Adding more specific ex is missing to do
         except Exception as e:
             logging.error(e)
             raise e

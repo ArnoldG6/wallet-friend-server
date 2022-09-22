@@ -198,14 +198,13 @@ class UserDAO(DAO):
         session = None
         try:
             session = self.create_session()
-            filters = (User.email == email)
-            user_result = session.query(User).filter(filters).one()
+            user_result = session.query(User).filter((User.email == email)).one()
             if not user_result:
                 raise NonExistentRecordException()
             return user_result
-        except Exception as e:
+        except NoResultFound as e:
             logging.exception(f"DB Connection failed. Details: {e}")
-            raise e
+            raise NonExistentRecordException
         finally:
             if session:
                 session.close()

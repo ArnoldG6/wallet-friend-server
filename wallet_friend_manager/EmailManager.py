@@ -38,28 +38,27 @@ class EmailManager:
     def send_reset_password(self, user: User, code: str):
         try:
             subject = 'Wallet Friend User Reset Password'
-            message = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to reset your password. ' \
-                      f'You must access the following link: {code}'
-            message = 'Subject: {}\n\n{}'.format(subject, message)
+            body = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to reset your password. You must access the following link: {code}'
+            message = 'Subject: {}\n\n{}'.format(subject, body)
             server = smtplib.SMTP('smtp-mail.outlook.com', 587)
             server.starttls()
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_ADDRESS, user.email, message)
+            server.sendmail(EMAIL_ADDRESS, user.email, message.encode("utf8"))
             server.quit()
-        except Exception as e:  # Any Exception
+        except BaseException as e:  # Any Exception
             logging.exception(f"Email Creation Failed. Details: {e}")
             raise e
 
     def send_change_password(self, user: User):
         try:
             subject = 'Wallet Friend Changed User Password'
-            message = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to notify a change of password. ' \
+            body = f'Hello {user.first_name} {user.last_name}, this is an email from Wallet Friend Support account to notify a change of password. ' \
                       f'Password has been changed on {(datetime.now()).strftime("%d/%m/%Y, %H:%M:%S")}'
-            message = 'Subject: {}\n\n{}'.format(subject, message)
+            message = 'Subject: {}\n\n{}'.format(subject, body)
             server = smtplib.SMTP('smtp-mail.outlook.com', 587)
             server.starttls()
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_ADDRESS, user.email, message)
+            server.sendmail(EMAIL_ADDRESS, user.email, message.encode("utf8"))
             server.quit()
         except Exception as e:  # Any Exception
             logging.exception(f"Email Creation Failed. Details: {e}")

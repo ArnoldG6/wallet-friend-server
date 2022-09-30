@@ -35,8 +35,8 @@ class User(Base):
     # M to M.
     roles = relationship('Role', secondary='t_user_role', back_populates='users', lazy='subquery')
     # ===Account relationship===
-    # O to M.
-    account = relationship("Account", back_populates="parent")
+    # O to O.
+    account = relationship("Account", back_populates="parent", uselist=False)
 
 
 @pydantic.dataclasses.dataclass
@@ -105,10 +105,13 @@ class Account(Base):
     # ===User relationship===
     # M to O.
     owner_username = Column(String(100), ForeignKey("t_user.username"), nullable=False)
-    owner = relationship("User", back_populates="children")
+    owner = relationship("User", back_populates="child")
     # ===Movement relationship===
-    # M to M.
+    # M to M. Pending to divide movements in single incomes and expenses
     movements = relationship("Movement", secondary='t_account_movement', back_populates='accounts', lazy='subquery')
+    # ===RecurrentMovement relationship===
+    # M to M. Pending to implement at all
+
     # ===Bag relationship===
     # O to M.
     bags = relationship("Bag", back_populates="parent")
@@ -124,7 +127,7 @@ class Movement(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     creation_datetime = Column(DateTime, nullable=False)
     name = Column(String(50), nullable=False)
-    description = Column(String(50))
+    description = Column(String(50), nullable=True)
     amount = Column(Numeric, nullable=False)
     available_amount = Column(Numeric, nullable=False)
     # ===Account relationship===
@@ -134,7 +137,7 @@ class Movement(Base):
     # M to M.
     bag = relationship('Bag', secondary='t_bag_movement', back_populates='movements', lazy='subquery')
     # ===RecurrentMovement relationship===
-    # Inheritance.
+    # Inheritance. Not sure if it is this way
     __mapper_args__ = {
         "polymorphic_on": "movement_type",
     }
@@ -155,10 +158,11 @@ class RecurrentMovement(Movement):
     __tablename__ = 't_recurrentMovement'  # Indexed.
     temporary_type = Column(Enum(TemporaryType))
     end_date = Column(DateTime, nullable=False)
+    # ===Movement relationship===
+    # Inheritance. Not sure if it is this way
     __mapper_args__ = {
         "polymorphic_identity": "movement",
     }
-    # Applying Inheritance is missing to do
 
 
 class Bag(Base):
@@ -170,6 +174,7 @@ class Bag(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     balance = Column(Numeric, nullable=False)
     goal_balance = Column(Numeric, nullable=False)
+    done = Column(Boolean, nullable=False)
     end_date = Column(DateTime, nullable=False)
     # ===Account relationship===
     # M to O.
@@ -177,7 +182,7 @@ class Bag(Base):
     account = relationship("Account", back_populates="children")
     # ===Movement relationship===
     # M to M.
-    movements = relationship("Movement", secondary='t_bag_movement', back_populates='bags', lazy='subquery')
+    history = relationship("Movement", secondary='t_bag_movement', back_populates='bags', lazy='subquery')
 
 
 class BagMovement(Base):

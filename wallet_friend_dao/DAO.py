@@ -15,6 +15,7 @@ from wallet_friend_db import DbSettingsParser
 
 class DAO:
     db_settings_path = "wallet_friend_db/config.ini"
+
     def __init__(self):
         self.__session = None
         self.__default_profile = "local_postgresql"

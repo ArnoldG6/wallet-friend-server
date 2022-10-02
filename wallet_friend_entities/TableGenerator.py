@@ -15,4 +15,5 @@ db_string = "postgresql://e89db34874f8a3e18aff2c149d35eed83b50bcce294983021855fd
 
 
 db = create_engine(db_string)
+updated_base.metadata.drop_all(bind=db)
 updated_base.metadata.create_all(db, updated_base.metadata.tables.values())

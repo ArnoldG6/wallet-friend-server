@@ -27,7 +27,7 @@ from .DAO import DAO
 
 class UserDAO(DAO):
     """
-    DBHandler class  manages the mqd_db queries in order to use CRUD methods.
+    UserDAO class  manages db queries in order to use CRUD methods.
     """
     __user_dao_singleton = None  # Singleton UserDAO object
 
@@ -37,13 +37,13 @@ class UserDAO(DAO):
         Returns:
             UserDAO: the UserDAO class singleton object.
         """
-        if UserDAO.__user_dao_singleton is None:
+        if not UserDAO.__user_dao_singleton:
             UserDAO.__user_dao_singleton = UserDAO()
         return UserDAO.__user_dao_singleton
 
     def __init__(self):
         super().__init__()
-        if UserDAO.__user_dao_singleton is not None:
+        if UserDAO.__user_dao_singleton:
             raise SingletonObjectException()
         else:
             UserDAO.__user_dao_singleton = self

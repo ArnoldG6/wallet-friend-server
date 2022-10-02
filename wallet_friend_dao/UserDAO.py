@@ -20,7 +20,7 @@ from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException, ExistentRecordException, NonExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from wallet_friend_settings import default_password_pattern
+from wallet_friend_settings import default_password_pattern, default_db_settings_path
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from .DAO import DAO
 
@@ -32,7 +32,7 @@ class UserDAO(DAO):
     __user_dao_singleton = None  # Singleton UserDAO object
 
     @staticmethod
-    def get_instance(path="wallet_friend_db/config.ini") -> UserDAO:
+    def get_instance(path=default_db_settings_path()) -> UserDAO:
         """
         Returns:
             UserDAO: the UserDAO class singleton object.
@@ -41,7 +41,7 @@ class UserDAO(DAO):
             UserDAO.__user_dao_singleton = UserDAO(path)
         return UserDAO.__user_dao_singleton
 
-    def __init__(self, path="wallet_friend_db/config.ini"):
+    def __init__(self, path=default_db_settings_path()):
         super().__init__(path)
         if UserDAO.__user_dao_singleton:
             raise SingletonObjectException()

@@ -130,6 +130,7 @@ class Movement(Base):
     available_amount = Column(Numeric, nullable=False)
     # ===Account relationship===
     # Many to one.
+    account_id = Column(BigInteger, ForeignKey('t_account.id'))
     account = relationship('Account', back_populates='movements', lazy='subquery')
     # ===Bag relationship===
     # M to M.

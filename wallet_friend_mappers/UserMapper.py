@@ -63,7 +63,7 @@ class UserMapper(Mapper):
     def user_register_dto_to_user(self, user_register_dto):
         try:
             u = User()
-            u.__dict__ = u.__dict__ | user_register_dto.dict()
+            u.__dict__ |= user_register_dto.dict()
             return u
         except ValueError as e:
             logging.exception(e)

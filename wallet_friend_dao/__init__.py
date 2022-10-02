@@ -6,4 +6,5 @@ GPL-3.0 license ©2022
 """
 from .UserDAO import UserDAO
 from .RoleDAO import RoleDAO
+from .PermissionDAO import PermissionDAO
 from .DAO import DAO

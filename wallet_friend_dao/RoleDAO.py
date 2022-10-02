@@ -10,8 +10,10 @@ import logging
 import datetime
 from enum import Enum
 from sqlalchemy.orm.exc import NoResultFound
+
+from wallet_friend_settings import default_db_settings_path
 from .DAO import DAO
-from wallet_friend_dao.PermissionDAO import ClientPermission
+from wallet_friend_dao.PermissionDAO import ClientPermission, PermissionDAO
 from wallet_friend_entities import Role, Permission
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
@@ -32,7 +34,7 @@ class RoleDAO(DAO):
     __role_dao_singleton = None  # Singleton RoleDAO object
 
     @staticmethod
-    def get_instance(path="wallet_friend_db/config.ini") -> RoleDAO:
+    def get_instance(path=default_db_settings_path()) -> RoleDAO:
         """
         Returns:
             RoleDAO: the RoleDAO class singleton object.
@@ -41,7 +43,7 @@ class RoleDAO(DAO):
             RoleDAO.__role_dao_singleton = RoleDAO(path)
         return RoleDAO.__role_dao_singleton
 
-    def __init__(self, path="wallet_friend_db/config.ini"):
+    def __init__(self, path=default_db_settings_path()):
         super().__init__(path)
         if RoleDAO.__role_dao_singleton:
             raise SingletonObjectException()
@@ -53,28 +55,40 @@ class RoleDAO(DAO):
         Returns:
             Role: default client role
         """
-        session = None
+        role_session = None
         try:
-            session = self.create_session()
+            role_session = self.create_session()
+            role_session.expire_on_commit = False
             try:
-                r = session.query(Role).filter((Role.name == ClientRole.NAME.value)).one()  # Searching for a
+                r = role_session.query(Role).filter((Role.name == ClientRole.NAME.value)).one()  # Searching for a
                 # repeated instance.
                 if r is not None:
                     return r
             except NoResultFound as e:
                 pass  # If entity was not found program shall continue normally.
 
-            client_permission = Permission(creation_datetime=datetime.datetime, name=ClientPermission.NAME.value,
-                                           description=ClientPermission.DESCRIPTION.value)
-            role = Role(name=ClientRole.NAME.value, description=ClientRole.DESCRIPTION.value,
-                        creation_datetime=datetime.datetime, permissions=[client_permission])
-            client_permission.roles = [role]
-            session.add(role)
-            session.commit()
-            return role
+            client_permission = Permission()
+            client_permission.__dict__ |= {
+                "creation_datetime": datetime.datetime.now(),
+                "name": ClientPermission.NAME.value,
+                "description": ClientPermission.DESCRIPTION.value
+            }
+            client_role = Role()
+            client_role.__dict__ |= {
+                "creation_datetime": datetime.datetime.now(),
+                "name": ClientRole.NAME.value,
+                "description": ClientRole.DESCRIPTION.value
+            }
+
+            role_session.add(client_permission)
+            role_session.add(client_role)
+            client_role.permissions = [client_permission]
+            client_permission.roles = [client_role]
+            role_session.commit()
+            return client_role
         except Exception as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
         finally:
-            if session:
-                session.close()
+            if role_session:
+                role_session.close()

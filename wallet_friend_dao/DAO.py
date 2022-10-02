@@ -11,11 +11,12 @@ from sqlalchemy.exc import PendingRollbackError
 from sqlalchemy.orm import sessionmaker
 
 from wallet_friend_db import DbSettingsParser
+from wallet_friend_settings import default_db_settings_path
 
 
 class DAO:
 
-    def __init__(self, path="wallet_friend_db/config.ini"):
+    def __init__(self, path=default_db_settings_path()):
         self.__db_settings_path = path
         self.__session = None
         self.__default_profile = "local_postgresql"
@@ -28,14 +29,8 @@ class DAO:
     def get_instance():
         pass
 
-    def get_db_settings(self):
-        return self.__db_settings
-
     def create_session(self):
         try:
             return sessionmaker(bind=self.__engine)()  # Session shall be closed from outside
         except BaseException as e:
             logging.exception(e)
-
-    def set_db_settings_path(self, path):
-        self.__db_settings_path = path

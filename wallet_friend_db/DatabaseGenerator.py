@@ -6,6 +6,7 @@ GPL-3.0 license ©2022
 """
 import datetime
 
+from wallet_friend_dao import UserDAO
 from wallet_friend_dao.PermissionDAO import ClientPermission
 from wallet_friend_dao.RoleDAO import ClientRole, RoleDAO
 from wallet_friend_db import DbSettingsParser
@@ -30,18 +31,29 @@ class DatabaseGenerator:
         updated_base.metadata.drop_all(bind=engine)
         updated_base.metadata.create_all(engine, updated_base.metadata.tables.values())
         """
-        Starts default auth information
+        Inits default auth data
         """
+        user = User()
+        user.__dict__ |= {
+            "username": "arnold",
+            "email": "arnoldgq612@gmail.com",
+            "pwd_hash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+            "first_name": "Arnold",
+            "last_name": "González",
+            "enabled": True,
+            "creation_datetime": datetime.datetime.now(),
+            "token": None
+        }
+        session = UserDAO.get_instance("../wallet_friend_db/config.ini").create_session()
+        role = RoleDAO.get_instance("../wallet_friend_db/config.ini").export_default_client_role()
+        session.object_session(role)
+        session.add(role)
+        # session.merge(user)
+        user.roles = [role]
+        role.users.append(user)
+        session.add(user)
+        session.commit()
+        session.close()
 
-        user = User(username="arnold", email="arnoldgq612@gmail.com",
-                    pwd_hash="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-                    first_name="Arnold", last_name="González",
-                    enabled=True, token=None, roles=[],
-                    creation_datetime=datetime.datetime)
 
-# DatabaseGenerator().generate()
-
-# dao = RoleDAO.get_instance("../wallet_friend_db/config.ini")
-# r = dao.export_default_client_role()
-# print(r.name)
-# print(r.permissions[0].name)
+DatabaseGenerator().generate()

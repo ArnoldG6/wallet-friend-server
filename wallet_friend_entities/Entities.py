@@ -76,7 +76,6 @@ class UserRole(Base):
     """
     __tablename__ = 't_user_role'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    creation_datetime = Column(DateTime, nullable=False)
     user_id = Column(BigInteger, ForeignKey('t_user.id'))
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
 
@@ -87,7 +86,6 @@ class RolePermission(Base):
     """
     __tablename__ = 't_role_permission'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    creation_datetime = Column(DateTime, nullable=False)
     role_id = Column(BigInteger, ForeignKey('t_role.id'))
     permission_id = Column(BigInteger, ForeignKey('t_permission.id'))
 

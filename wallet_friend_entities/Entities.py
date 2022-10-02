@@ -109,7 +109,7 @@ class Account(Base):
     movements = relationship("Movement", back_populates="account", lazy="subquery")
     # ===FixedMovement relationship===
     # One to many.
-    fixed_movements = relationship("FixedMovement", back_populates="account", lazy="subquery")
+    fixed_movements = relationship("FixedMovement", back_populates="account", lazy="subquery",overlaps="movements")
     # ===Bag relationship===
     # One to many.
     bags = relationship("Bag", back_populates="account", lazy="subquery")

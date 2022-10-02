@@ -32,17 +32,17 @@ class UserDAO(DAO):
     __user_dao_singleton = None  # Singleton UserDAO object
 
     @staticmethod
-    def get_instance() -> UserDAO:
+    def get_instance(path="wallet_friend_db/config.ini") -> UserDAO:
         """
         Returns:
             UserDAO: the UserDAO class singleton object.
         """
         if not UserDAO.__user_dao_singleton:
-            UserDAO.__user_dao_singleton = UserDAO()
+            UserDAO.__user_dao_singleton = UserDAO(path)
         return UserDAO.__user_dao_singleton
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, path="wallet_friend_db/config.ini"):
+        super().__init__(path)
         if UserDAO.__user_dao_singleton:
             raise SingletonObjectException()
         else:

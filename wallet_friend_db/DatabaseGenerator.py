@@ -7,7 +7,7 @@ GPL-3.0 license ©2022
 import datetime
 
 from wallet_friend_dao.PermissionDAO import ClientPermission
-from wallet_friend_dao.RoleDAO import ClientRole
+from wallet_friend_dao.RoleDAO import ClientRole, RoleDAO
 from wallet_friend_db import DbSettingsParser
 from wallet_friend_entities.Entities import updated_base, Role, Permission, User
 from sqlalchemy import create_engine
@@ -32,16 +32,16 @@ class DatabaseGenerator:
         """
         Starts default auth information
         """
-        permission = Permission(creation_datetime=datetime.datetime, name=ClientPermission.NAME.value,
-                                description=ClientPermission.DESCRIPTION.value)
-        role = Role(name=ClientRole.NAME.value, description=ClientRole.DESCRIPTION.value,
-                    creation_datetime=datetime.datetime, permissions=[permission])
-        permission.roles = [role]
+
         user = User(username="arnold", email="arnoldgq612@gmail.com",
                     pwd_hash="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
                     first_name="Arnold", last_name="González",
                     enabled=True, token=None, roles=[],
                     creation_datetime=datetime.datetime)
 
-
 # DatabaseGenerator().generate()
+
+# dao = RoleDAO.get_instance("../wallet_friend_db/config.ini")
+# r = dao.export_default_client_role()
+# print(r.name)
+# print(r.permissions[0].name)

@@ -157,7 +157,7 @@ class FixedMovement(Movement):
     __tablename__ = 't_fixed_movement'  # Indexed.
     id = Column(BigInteger, ForeignKey('t_movement.id'), primary_key=True, index=True)  # Auto-sequential.
     temporary_type = Column(Enum(TemporaryType))
-    end_date = Column(DateTime, nullable=False)
+    repeat_date = Column(DateTime, nullable=False)
     # ===Movement relationship===
     __mapper_args__ = {
         "polymorphic_identity": "t_fixed_movement",
@@ -201,6 +201,7 @@ class HistoricBagMovement(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     creation_datetime = Column(DateTime, nullable=False)
     amount = Column(Numeric, nullable=False)
+    origin = Column(BigInteger, ForeignKey('t_movement.id'), nullable=False)
 
 
 # Updated base object for table generation script.

@@ -10,6 +10,7 @@ from wallet_friend_dto.MovementDTO import MovementDetailsDTO
 from wallet_friend_entities.Entities import Movement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers import BagMovementMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -53,6 +54,19 @@ class MovementMapper(Mapper):
         except BaseException as e:
             logging.exception(e)
             raise MalformedRequestException()
+
+    def movement_list_to_movement_details_dto_list(self, movement_list):
+        """
+        Params:
+            movement_list: List of Movements objects to be translated.
+        Returns:
+            A list of MovementDetailsDTO objects.
+        """
+        try:
+            return [self.movement_to_movement_details_dto(r) for r in movement_list]
+        except MalformedRequestException as e:
+            logging.exception(e)
+            raise e
 
     """
     ==========================Input-purpose-mapping.==========================

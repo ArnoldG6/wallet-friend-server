@@ -10,6 +10,7 @@ from wallet_friend_dto.FixedMovementDTO import FixedMovementDetailsDTO
 from wallet_friend_entities.Entities import FixedMovement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers import BagMovementMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -43,7 +44,7 @@ class FixedMovementMapper(Mapper):
     def fixed_movement_to_fixed_movement_details_dto(self, u):
         try:
             fixed_movement_d = u.__dict__
-            fixed_movement_d["bagMovements"] = BagMovementMapper.get_instance(). \
+            fixed_movement_d["bagMovements"] = BagMovementMapper.get_instance().\
                 bag_movement_list_to_bag_movement_details_dto_list(u.bagMovements)
             return FixedMovementDetailsDTO(**fixed_movement_d)
 
@@ -53,6 +54,19 @@ class FixedMovementMapper(Mapper):
         except BaseException as e:
             logging.exception(e)
             raise MalformedRequestException()
+
+    def fixed_movement_list_to_movement_details_dto_list(self, fixed_movement_list):
+        """
+        Params:
+            fixed_movement_list: List of FixedMovements objects to be translated.
+        Returns:
+            A list of FixedMovementDetailsDTO objects.
+        """
+        try:
+            return [self.fixed_movement_to_fixed_movement_details_dto(r) for r in fixed_movement_list]
+        except MalformedRequestException as e:
+            logging.exception(e)
+            raise e
 
     """
     ==========================Input-purpose-mapping.==========================

@@ -10,6 +10,7 @@ from wallet_friend_dto.BagDTO import BagDetailsDTO
 from wallet_friend_entities.Entities import Bag
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers import HistoricBagMovementMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -53,6 +54,19 @@ class BagMapper(Mapper):
         except BaseException as e:
             logging.exception(e)
             raise MalformedRequestException()
+
+    def bag_list_to_bag_details_dto_list(self, bag_list):
+        """
+        Params:
+            bag_list: List of Bag objects to be translated.
+        Returns:
+                A list of BagDetailsDTO objects.
+            """
+        try:
+            return [self.bag_to_bag_details_dto(r) for r in bag_list]
+        except MalformedRequestException as e:
+            logging.exception(e)
+            raise e
 
     """
     ==========================Input-purpose-mapping.==========================

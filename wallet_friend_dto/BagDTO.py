@@ -49,7 +49,7 @@ class BagDetailsDTO(BaseModel):
     """
     owner: str  # id of the account
     balance: float
-    history: List[HistoricBagMovementDetailsDTO]
+    history: list
     goal_balance: float
     done: bool
     end_date: datetime

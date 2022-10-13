@@ -51,8 +51,8 @@ class AccountDetailsDTO(BaseModel):
     owner: str  # username of the owner
     creation_datetime: datetime
     total_balance: float
-    single_incomes: List[MovementDetailsDTO]
-    single_expenses: List[MovementDetailsDTO]
-    fixed_incomes: List[FixedMovementDetailsDTO]
-    fixed_expenses: List[FixedMovementDetailsDTO]
-    bags: List[BagDetailsDTO]
+    single_incomes: list
+    single_expenses: list
+    fixed_incomes: list
+    fixed_expenses: list
+    bags: list

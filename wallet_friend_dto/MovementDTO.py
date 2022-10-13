@@ -54,4 +54,4 @@ class MovementDetailsDTO(BaseModel):
     description: str
     amount: int
     available_amount: int
-    bagMovements: List[BagMovementDTO]
+    bagMovements: list

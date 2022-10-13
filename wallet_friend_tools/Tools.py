@@ -24,3 +24,5 @@ def check_non_empty_string(s: str) -> bool:
     if not s or len(s.replace(" ", "")) == 0:
         return False
     return True
+
+

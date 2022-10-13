@@ -56,6 +56,6 @@ class FixedMovementDetailsDTO(BaseModel):
     description: str
     amount: float
     available_amount: float
-    bagMovements: List[BagMovementDTO]
+    bagMovements: list
     temporary_type: str
     repeat_date: datetime

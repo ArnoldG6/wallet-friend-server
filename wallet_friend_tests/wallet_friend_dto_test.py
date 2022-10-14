@@ -9,6 +9,7 @@ import logging
 from pydantic.error_wrappers import ValidationError
 
 from wallet_friend_dto import UserAuthDTO
+from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
 
@@ -34,7 +35,7 @@ def test_user_auth_dto_1():
                 # print(UserAuthDTO(username=a, password=b).dict())
                 logging.info(f"({a},{b}): {UserAuthDTO(username=a, password=b).json()}")
                 successful_cases += 1
-            except ValidationError as e:
+            except MalformedRequestException as e:
                 logging.exception(e)
         assert successful_cases != 2
     except Exception as e:

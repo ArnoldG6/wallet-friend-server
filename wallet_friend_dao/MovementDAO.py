@@ -46,7 +46,7 @@ class MovementDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    def add(self, new_account: Movement):
+    def add(self, new_movement, username):
         try:
             session = self.create_session()
             #Pending to do

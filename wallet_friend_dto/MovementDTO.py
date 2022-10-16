@@ -22,7 +22,7 @@ class MovementAddDTO(BaseModel):
     """
     Input DTO for movement addition.
     """
-    owner: str  # id of the account
+    owner: str  # owner's username
     name: str
     description: str
     amount: float

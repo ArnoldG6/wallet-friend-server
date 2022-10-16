@@ -1,4 +1,4 @@
-from .DAO import DAO
+from wallet_friend_dao import DAO
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
 

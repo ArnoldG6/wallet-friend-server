@@ -6,7 +6,7 @@ GPL-3.0 license ©2022
 """
 from sqlalchemy.testing.plugin.plugin_base import logging
 
-from wallet_friend_dao import DAO
+from .DAO import DAO
 from wallet_friend_entities.Entities import Bag
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException

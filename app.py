@@ -90,6 +90,29 @@ def users_reset_password():
 ================================================EO User web services================================================
 """
 
+"""
+==============================================SO Movement web services==================================================
+"""
+
+
+@app.route(f"/api/{latest_version}/movements/single", methods=["POST"])
+def movements_create_single_movement():
+    pass
+
+
+@app.route(f"/api/{latest_version}/movements/fixed", methods=["POST"])
+def movements_create_fixed_movement():
+    pass
+
+
+@app.route(f"/api/{latest_version}/movements/<movement_id>", methods=["DELETE"])
+def movements_delete_movement(movement_id):
+    pass
+
+
+@app.route(f"/api/{latest_version}/movements/assign-to-bag", methods=["POST"])
+def movements_assign_movement_to_bag():
+    pass
 
 def start_development_server():
     """

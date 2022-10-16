@@ -97,7 +97,16 @@ def users_reset_password():
 
 @app.route(f"/api/{latest_version}/movements/single", methods=["POST"])
 def movements_create_single_movement():
-    MovementService(request).create_single_movement_service()
+    try:
+        MovementService(request).create_single_movement_service()
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 
 @app.route(f"/api/{latest_version}/movements/fixed", methods=["POST"])

@@ -34,9 +34,9 @@ class MovementService:
             if not self.__request:
                 raise ExpiredRequestException()
             try:
-                new_movement = MovementMapper.get_instance().\
-                    movement_add_dto_to_movement(MovementAddDTO(**self.__request.get_json()))
-                MovementDAO.get_instance().add(new_movement, new_movement.owner)
+                add_movement_dto = MovementAddDTO(**self.__request.get_json())
+                new_movement = MovementMapper.get_instance().movement_add_dto_to_movement(add_movement_dto)
+                MovementDAO.get_instance().add(new_movement, add_movement_dto.owner)
             except ValueError as e:
                 logging.exception(e)
                 raise MalformedRequestException

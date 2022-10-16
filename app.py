@@ -12,7 +12,7 @@ from flask_cors import CORS
 
 from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException, \
     ServiceUnavailableException
-from wallet_friend_services import AuthService
+from wallet_friend_services import AuthService, MovementService
 
 """
 HTTP server config.
@@ -97,7 +97,7 @@ def users_reset_password():
 
 @app.route(f"/api/{latest_version}/movements/single", methods=["POST"])
 def movements_create_single_movement():
-    pass
+    MovementService(request).create_single_movement_service()
 
 
 @app.route(f"/api/{latest_version}/movements/fixed", methods=["POST"])

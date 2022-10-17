@@ -72,10 +72,10 @@ class MovementDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    def delete(self, delete_account: Movement):
+    def delete(self, movement_id: int):
         try:
             session = self.create_session()
-            filters = (Movement.id == delete_account.id)
+            filters = (Movement.id == movement_id)
             movement = session.query(Movement).filter(filters).one()
             if movement is None:
                 raise NonExistentRecordException()

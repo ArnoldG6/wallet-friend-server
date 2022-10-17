@@ -11,7 +11,7 @@ from flask import request as f_request
 from wallet_friend_dao.MovementDAO import MovementDAO
 from wallet_friend_dto.MovementDTO import MovementAddDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import ExpiredRequestException, ExistentRecordException, \
-    MalformedRequestException
+    MalformedRequestException, NonExistentRecordException
 from wallet_friend_mappers.MovementMapper import MovementMapper
 
 
@@ -47,11 +47,38 @@ class MovementService:
             except ExistentRecordException as e:
                 logging.exception(e)
                 raise e
-            except Exception as e:
+            except BaseException as e:
                 logging.exception(e)
                 raise e
 
-        except Exception as e:
+        except BaseException as e:
+            logging.exception(e)
+            raise e
+
+    def delete_movement_service(self):
+        """
+        Returns:
+            None: if movement is registered correctly.
+        """
+        try:
+            if not self.__request:
+                raise ExpiredRequestException()
+            try:
+                if self.__request.get_json()["movement_id"] is None or \
+                        not isinstance(self.__request.get_json()["movement_id"], int):
+                    raise MalformedRequestException("Invalid parameter 'movement_id'.")
+                MovementDAO.get_instance().delete(self.__request.get_json()["movement_id"])
+            except ValueError as e:
+                logging.exception(e)
+                raise MalformedRequestException
+            except NonExistentRecordException as e:
+                logging.exception(e)
+                raise e
+            except BaseException as e:
+                logging.exception(e)
+                raise e
+
+        except BaseException as e:
             logging.exception(e)
             raise e
 

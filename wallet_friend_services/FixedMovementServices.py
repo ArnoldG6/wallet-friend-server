@@ -45,11 +45,11 @@ class FixedMovementService:
             except ExistentRecordException as e:
                 logging.exception(e)
                 raise e
-            except Exception as e:
+            except BaseException as e:
                 logging.exception(e)
                 raise e
 
 
-        except Exception as e:
+        except BaseException as e:
             logging.exception(e)
             raise e

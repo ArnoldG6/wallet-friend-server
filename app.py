@@ -124,12 +124,30 @@ def movements_create_fixed_movement():
 
 @app.route(f"/api/{latest_version}/movements/<movement_id>", methods=["DELETE"])
 def movements_delete_movement(movement_id):
-    pass
+    try:
+        # Service goes here
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 
 @app.route(f"/api/{latest_version}/movements/assign-to-bag", methods=["POST"])
 def movements_assign_movement_to_bag():
-    pass
+    try:
+        MovementService(request).delete_movement_service()
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 
 def start_development_server():

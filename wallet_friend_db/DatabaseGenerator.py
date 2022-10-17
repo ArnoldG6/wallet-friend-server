@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, User
+from wallet_friend_entities.Entities import updated_base, User, Account
 
 
 class DatabaseGenerator:
@@ -52,6 +52,17 @@ class DatabaseGenerator:
         user.roles = [role]
         role.users.append(user)
         session.add(user)
+
+        account = Account(
+            creation_datetime=datetime.datetime.now(),
+            total_balance=0.0,
+            owner_id=user.id,
+            owner=user
+        )
+
+        session.object_session(account)
+        session.add(account)
+
         session.commit()
         session.close()
 

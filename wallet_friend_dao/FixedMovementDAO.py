@@ -1,4 +1,5 @@
 from wallet_friend_dao import DAO
+from wallet_friend_entities.Entities import Movement
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
 
@@ -24,3 +25,6 @@ class FixedMovementDAO(DAO):
             raise SingletonObjectException()
         else:
             FixedMovementDAO.__fixed_movement_dao_singleton = self
+
+    def add(self, fixed_movement: Movement):
+        pass

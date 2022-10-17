@@ -22,7 +22,7 @@ class FixedMovementAddDTO(BaseModel):
     """
     Input DTO for fixedMovement addition.
     """
-    owner: str  # id of the account
+    owner: int   # id of the account
     name: str
     description: str
     amount: float

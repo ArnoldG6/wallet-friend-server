@@ -76,6 +76,8 @@ class MovementMapper(Mapper):
         try:
             u = Movement()
             u.__dict__ |= movement_add_dto.dict()
+            u["account_id"] = u["owner"]
+            del u["owner"]
             return u
         except ValueError as e:
             logging.exception(e)

@@ -76,6 +76,8 @@ class FixedMovementMapper(Mapper):
         try:
             u = FixedMovement()
             u.__dict__ |= fixed_movement_add_dto.dict()
+            u["account_id"] = u["owner"]
+            del u["owner"]
             return u
         except ValueError as e:
             logging.exception(e)

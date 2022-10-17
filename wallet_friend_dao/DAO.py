@@ -7,7 +7,6 @@ GPL-3.0 license ©2022
 import logging
 
 from sqlalchemy import create_engine
-from sqlalchemy.exc import PendingRollbackError
 from sqlalchemy.orm import sessionmaker
 
 from wallet_friend_db import DbSettingsParser

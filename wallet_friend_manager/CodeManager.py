@@ -8,9 +8,8 @@ import json
 import logging
 import random
 
-
-from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_entities.Entities import User
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
 FILE_NAME = 'Random_Codes.json'
 

@@ -11,7 +11,6 @@ from pydantic import BaseModel
 
 from wallet_friend_dto.PermissionDTO import PermissionDetailsDTO
 
-
 """
 ==========================Output DTOs.==========================
 """

@@ -4,10 +4,7 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
-import datetime
 import logging
-
-from pydantic.error_wrappers import ValidationError
 
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.AccountDTO import AccountAddDTO

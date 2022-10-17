@@ -6,16 +6,17 @@ GPL-3.0 license ©2022
 """
 from __future__ import annotations
 
-import logging
 import datetime
+import logging
 from enum import Enum
+
 from sqlalchemy.orm.exc import NoResultFound
 
-from wallet_friend_settings import default_db_settings_path
-from .DAO import DAO
-from wallet_friend_dao.PermissionDAO import ClientPermission, PermissionDAO
+from wallet_friend_dao.PermissionDAO import ClientPermission
 from wallet_friend_entities import Role, Permission
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_settings import default_db_settings_path
+from .DAO import DAO
 
 
 class ClientRole(Enum):

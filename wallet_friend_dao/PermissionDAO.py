@@ -5,11 +5,12 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 from __future__ import annotations
+
 from enum import Enum
 
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from .DAO import DAO
 from wallet_friend_settings import default_db_settings_path
+from .DAO import DAO
 
 
 class ClientPermission(Enum):

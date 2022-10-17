@@ -4,7 +4,7 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
-import datetime
+from datetime import datetime
 
 import pydantic
 from pydantic import BaseModel

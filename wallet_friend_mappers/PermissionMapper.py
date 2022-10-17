@@ -10,9 +10,8 @@ import logging
 from typing import List
 
 from pydantic import parse_obj_as
-from wallet_friend_dto import UserDetailsDTO
+
 from wallet_friend_dto.PermissionDTO import PermissionDetailsDTO
-from wallet_friend_entities import User, Permission, Role
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_mappers.Mapper import Mapper
 

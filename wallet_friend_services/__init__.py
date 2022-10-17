@@ -6,3 +6,4 @@ GPL-3.0 license ©2022
 """
 from .AuthServices import AuthService
 from .MovementServices import MovementService
+from .FixedMovementServices import FixedMovementService

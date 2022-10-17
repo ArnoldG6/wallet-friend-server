@@ -7,12 +7,11 @@ GPL-3.0 license ©2022
 import logging
 import secrets
 
-from flask import Flask, request, make_response
+from flask import Flask, request
 from flask_cors import CORS
 
-from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException, \
-    ServiceUnavailableException
-from wallet_friend_services import AuthService, MovementService
+from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException
+from wallet_friend_services import AuthService, MovementService, FixedMovementService
 
 """
 HTTP server config.
@@ -111,7 +110,16 @@ def movements_create_single_movement():
 
 @app.route(f"/api/{latest_version}/movements/fixed", methods=["POST"])
 def movements_create_fixed_movement():
-    pass
+    try:
+        FixedMovementService(request).create_fixed_movement_service()
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
 
 
 @app.route(f"/api/{latest_version}/movements/<movement_id>", methods=["DELETE"])

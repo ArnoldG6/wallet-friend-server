@@ -5,12 +5,11 @@ Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
 import datetime
-import os
-import smtplib
 import logging
+import smtplib
 
-from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_entities.Entities import User
+from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
 EMAIL_ADDRESS = 'walletfriendofficial@outlook.com'
 EMAIL_PASSWORD = '!QAZ2wsx#EDC'

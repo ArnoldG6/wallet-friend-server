@@ -7,7 +7,7 @@ GPL-3.0 license ©2022
 import enum
 
 import pydantic
-from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean, Numeric, Enum, create_engine
+from sqlalchemy import Column, String, DateTime, ForeignKey, BigInteger, Boolean, Numeric, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 

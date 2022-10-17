@@ -6,12 +6,12 @@ GPL-3.0 license ©2022
 """
 import datetime
 
-from wallet_friend_dao import UserDAO
-from wallet_friend_dao.PermissionDAO import ClientPermission
-from wallet_friend_dao.RoleDAO import ClientRole, RoleDAO
-from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, Role, Permission, User
 from sqlalchemy import create_engine
+
+from wallet_friend_dao import UserDAO
+from wallet_friend_dao.RoleDAO import RoleDAO
+from wallet_friend_db import DbSettingsParser
+from wallet_friend_entities.Entities import updated_base, User
 
 
 class DatabaseGenerator:

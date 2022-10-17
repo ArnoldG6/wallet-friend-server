@@ -4,8 +4,8 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
-from .UserDAO import UserDAO
-from .RoleDAO import RoleDAO
-from .PermissionDAO import PermissionDAO
-from .MovementDAO import MovementDAO
 from .DAO import DAO
+from .MovementDAO import MovementDAO
+from .PermissionDAO import PermissionDAO
+from .RoleDAO import RoleDAO
+from .UserDAO import UserDAO

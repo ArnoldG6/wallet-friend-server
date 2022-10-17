@@ -7,10 +7,10 @@ GPL-3.0 license ©2022
 from __future__ import annotations
 
 import datetime
+import hashlib
 import logging
 import re
 import time
-import hashlib
 
 import jwt
 from sqlalchemy.orm.exc import NoResultFound

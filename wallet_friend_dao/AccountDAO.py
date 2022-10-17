@@ -4,12 +4,18 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
+from __future__ import annotations
+import datetime
+
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.testing.plugin.plugin_base import logging
 
-from wallet_friend_dao import DAO
-from wallet_friend_entities.Entities import Account
-from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_settings import default_db_settings_path
+from .DAO import DAO
+from wallet_friend_entities.Entities import Account, User
+from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException, MalformedRequestException, \
+    ExistentRecordException
 
 
 class AccountDAO(DAO):
@@ -19,17 +25,17 @@ class AccountDAO(DAO):
     __account_dao_singleton = None  # Singleton AccountDAO object
 
     @staticmethod
-    def get_instance():
+    def get_instance(path=default_db_settings_path()) -> AccountDAO:
         """
         Returns:
             AccountDAO: the AccountDAO class singleton object.
         """
         if AccountDAO.__account_dao_singleton is None:
-            AccountDAO.__account_dao_singleton = AccountDAO()
+            AccountDAO.__account_dao_singleton = AccountDAO(path)
         return AccountDAO.__account_dao_singleton
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, path=default_db_settings_path()):
+        super().__init__(path)
         if AccountDAO.__account_dao_singleton is not None:
             raise SingletonObjectException()
         else:
@@ -46,13 +52,34 @@ class AccountDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    def add(self, new_account: Account):
+    def add(self, new_account: Account, owner_username: str):
+        session = None
+        u = None
         try:
+            if not new_account:
+                raise MalformedRequestException("Invalid parameter 'new_account' exception")
             session = self.create_session()
-            #Pending to do
-        except BaseException as e:
+            try:
+                u = session.query(User).filter(User.username == owner_username).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException("This record is not existent")
+            new_account.owner = u
+            new_account.owner_id = u.id
+            new_account.creation_datetime = datetime.datetime.now()
+            new_account.movements = []
+            new_account.fixed_movements = []
+            new_account.bags = []
+            session.add(new_account)
+            session.commit()
+        except ExistentRecordException as e:
+            logging.exception(e)
+            raise e
+        except Exception as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()
 
     def update(self, update_account: Account):
         try:
@@ -62,8 +89,8 @@ class AccountDAO(DAO):
             if account is None:
                 raise NonExistentRecordException()
             else:
-                account.total_balance=update_account.total_balance
-                #Pending updates
+                account.total_balance = update_account.total_balance
+                # Pending updates
                 session.commit()
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
@@ -82,3 +109,25 @@ class AccountDAO(DAO):
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+
+    def search_account_by_id(self, account_id: int):
+        """
+        Parameters:
+            param id: id to search account.
+        Returns:
+            Account: Existing account.
+        """
+        session = None
+        try:
+            session = self.create_session()
+            filters = (Account.id == account_id)
+            account_result = session.query(User).filter(filters).one()
+            if not account_result:
+                raise NonExistentRecordException()
+            return account_result
+        except Exception as e:
+            logging.exception(f"DB Connection failed. Details: {e}")
+            raise e
+        finally:
+            if session:
+                session.close()

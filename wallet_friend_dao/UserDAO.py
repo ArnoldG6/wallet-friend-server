@@ -17,11 +17,13 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_entities import User
+from wallet_friend_entities.Entities import Account
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException, ExistentRecordException, NonExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_settings import default_password_pattern, default_db_settings_path
 from wallet_friend_tools import check_non_empty_non_spaces_string
+from . import RoleDAO
 from .DAO import DAO
 
 
@@ -138,9 +140,25 @@ class UserDAO(DAO):
             new_user.username = new_user.username.lower()
             new_user.email = new_user.email.lower()
             new_user.enabled = True
-            new_user.roles = []
             new_user.first_name = new_user.first_name.title()
             new_user.last_name = new_user.last_name.title()
+            # SO Role/Permission section
+            default_role = RoleDAO.get_instance().export_default_client_role()
+            session.object_session(default_role)
+            session.add(default_role)
+            new_user.roles = [default_role]
+            default_role.users.append(new_user)
+            # EO Role/Permission section
+            # SO Account section
+            account = Account(
+                creation_datetime=datetime.datetime.now(),
+                total_balance=0.0,
+                owner_id=new_user.id,
+                owner=new_user
+            )
+            session.object_session(account)
+            session.add(account)
+            # EO Account section
             session.add(new_user)
             session.commit()
         except ExistentRecordException as e:

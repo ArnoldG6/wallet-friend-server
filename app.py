@@ -125,7 +125,7 @@ def movements_create_fixed_movement():
 @app.route(f"/api/{latest_version}/movements/<movement_id>", methods=["DELETE"])
 def movements_delete_movement(movement_id):
     try:
-        # Service goes here
+        MovementService(request).delete_movement_service()
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)
@@ -139,7 +139,7 @@ def movements_delete_movement(movement_id):
 @app.route(f"/api/{latest_version}/movements/assign-to-bag", methods=["POST"])
 def movements_assign_movement_to_bag():
     try:
-        MovementService(request).delete_movement_service()
+        # Service goes here
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

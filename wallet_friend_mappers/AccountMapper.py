@@ -64,16 +64,17 @@ class AccountMapper(Mapper):
 
             account_d["single_incomes"] = MovementMapper.get_instance(). \
                 movement_list_to_movement_details_dto_list(single_incomes)
-            """
             account_d["single_expenses"] = MovementMapper.get_instance().\
                 movement_list_to_movement_details_dto_list(
                 account.single_expenses)
+
             account_d["fixed_incomes"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_incomes)
+                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_incomes)
             account_d["fixed_expenses"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_expenses)
+                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_expenses)
+
             account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
-            """
+
             return AccountDetailsDTO(**account_d)
         except ValueError as e:
             logging.exception(e)

@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, User, Account, Movement
+from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType
 from wallet_friend_mappers.AccountMapper import AccountMapper
 from wallet_friend_mappers.MovementMapper import MovementMapper
 
@@ -70,6 +70,7 @@ class DatabaseGenerator:
         try:
             session.flush()
             # ======================== EO Of Account data ========================
+            # ======================== SO Of Movements data ========================
             account.movements = [
                 Movement(
                     creation_datetime=datetime.datetime.now(),
@@ -94,6 +95,20 @@ class DatabaseGenerator:
             #print(account)
             print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
             print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
+            # ======================== EO Of Movements data ========================
+            # ======================== SO Of FixedMovements data ========================
+            account.fixed_movements = [
+                FixedMovement(
+                    creation_datetime=datetime.datetime.now(),
+                    account_id=account.id,
+                    amount=1200000.0,
+                    available_amount=1200000.0,
+                    name="Salario",
+                    description="algo",
+                    temporary_type=TemporaryType.monthly,
+                )
+            ]
+            # ======================== EO Of FixedMovements data ========================
             session.commit()
             session.close()
 

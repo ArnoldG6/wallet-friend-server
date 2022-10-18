@@ -109,7 +109,7 @@ class Account(Base):
     movements = relationship("Movement", back_populates="account", lazy="subquery")
     # ===FixedMovement relationship===
     # One to many.
-    fixed_movements = relationship("FixedMovement", back_populates="account", lazy="subquery", overlaps="movements")
+    fixed_movements = relationship("FixedMovement", lazy="subquery", overlaps="movements")#, back_populates="account"
     # ===Bag relationship===
     # One to many.
     bags = relationship("Bag", back_populates="account", lazy="subquery")
@@ -131,7 +131,7 @@ class Movement(Base):
     # ===Account relationship===
     # Many to one.
     account_id = Column(BigInteger, ForeignKey('t_account.id'))
-    account = relationship('Account', back_populates='movements', lazy='subquery')
+    account = relationship('Account', back_populates='movements', lazy='subquery',overlaps="fixed_movements")
     # ===Bag relationship===
     # M to M.
     bag_movements = relationship("BagMovement", lazy="subquery")
@@ -157,7 +157,7 @@ class FixedMovement(Movement):
     __tablename__ = 't_fixed_movement'  # Indexed.
     id = Column(BigInteger, ForeignKey('t_movement.id'), primary_key=True, index=True)  # Auto-sequential.
     temporary_type = Column(Enum(TemporaryType))
-    repeat_date = Column(DateTime, nullable=False)
+    repeat_date = Column(DateTime, nullable=True)
     # ===Movement relationship===
     __mapper_args__ = {
         "polymorphic_identity": "t_fixed_movement",

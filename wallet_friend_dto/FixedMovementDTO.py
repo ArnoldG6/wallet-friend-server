@@ -9,6 +9,8 @@ from datetime import datetime
 import pydantic
 from pydantic import BaseModel
 
+from wallet_friend_dto.BagMovementDTO import BagMovementDetailsDTO
+
 """
 =============================================FixedMovement-related DTOs.=============================================
 """
@@ -47,6 +49,6 @@ class FixedMovementDetailsDTO(BaseModel):
     description: str
     amount: float
     available_amount: float
-    bagMovements: list
+    bag_movements: [BagMovementDetailsDTO]
     temporary_type: str
     repeat_date: datetime

@@ -47,4 +47,4 @@ class MovementDetailsDTO(BaseModel):
     description: str
     amount: float
     available_amount: float
-    bagMovements: [BagMovementDetailsDTO]
+    bag_movements: [BagMovementDetailsDTO]

@@ -55,7 +55,7 @@ class MovementDAO(DAO):
         a = None
         try:
             if not new_movement:
-                raise MalformedRequestException("Invalid parameter 'new_account' exception")
+                raise MalformedRequestException("Invalid parameter 'new_movement' exception")
             session = self.create_session()
             try:
                 a = session.query(Account).filter(Account.id == account_id).one()
@@ -64,7 +64,7 @@ class MovementDAO(DAO):
             new_movement.account = a
             new_movement.account_id = a.id
             new_movement.creation_datetime = datetime.datetime.now()
-            new_movement.bag_movements = []
+            # new_movement.bag_movements = []
             session.add(new_movement)
             session.commit()
         except ExistentRecordException as e:
@@ -85,11 +85,11 @@ class MovementDAO(DAO):
             if movement is None:
                 raise NonExistentRecordException()
             else:
-                movement.amount=update_movement.amount
+                movement.amount = update_movement.amount
                 movement.available_amount = update_movement.available_amount
                 movement.name = update_movement.name
                 movement.description = update_movement.description
-                #Pending updates
+                # Pending updates
                 session.commit()
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
@@ -99,12 +99,13 @@ class MovementDAO(DAO):
         try:
             session = self.create_session()
             filters = (Movement.id == movement_id)
-            movement = session.query(Movement).filter(filters).one()
-            if movement is None:
-                raise NonExistentRecordException()
-            else:
+            try:
+                movement = session.query(Movement).filter(filters).one()
                 session.delete(movement)
                 session.commit()
+            except NoResultFound as e:
+                raise NonExistentRecordException('movement_id not found')
+
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e

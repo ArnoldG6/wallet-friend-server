@@ -40,10 +40,10 @@ class BagMovementMapper(Mapper):
     ==========================Outer-purpose-mapping.==========================
     """
 
-    def bag_movement_to_bag_movement_details_dto(self, u):
+    def bag_movement_to_bag_movement_details_dto(self, bag_movement):
         try:
-            bag_movement_d = u.__dict__
-            bag_movement_d["bag"] = BagMapper.get_instance().bag_to_bag_details_dto(u.bag)
+            bag_movement_d = bag_movement.__dict__
+            bag_movement_d["bag"] = BagMapper.get_instance().bag_to_bag_details_dto(bag_movement.bag)
             return BagMovementDetailsDTO(**bag_movement_d)
         except ValueError as e:
             logging.exception(e)
@@ -57,7 +57,7 @@ class BagMovementMapper(Mapper):
 
     def bag_movement_list_to_bag_movement_details_dto_list(self, bag_movement_list):
         try:
-            return [self.bag_movement_to_bag_movement_details_dto(m) for m in bag_movement_list]
+            return [self.bag_movement_to_bag_movement_details_dto(b) for b in bag_movement_list]
         except ValueError as e:
             logging.exception(e)
             raise MalformedRequestException(str(e))

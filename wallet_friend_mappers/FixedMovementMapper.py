@@ -4,7 +4,7 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_dto.FixedMovementDTO import FixedMovementDetailsDTO
 from wallet_friend_entities.Entities import FixedMovement

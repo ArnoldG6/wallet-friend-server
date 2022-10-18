@@ -41,11 +41,11 @@ class MovementMapper(Mapper):
     ==========================Outer-purpose-mapping.==========================
     """
 
-    def movement_to_movement_details_dto(self, u):
+    def movement_to_movement_details_dto(self, movement):
         try:
-            movement_d = u.__dict__
+            movement_d = movement.__dict__
             movement_d["bag_movements"] = BagMovementMapper.get_instance(). \
-                bag_movement_list_to_bag_movement_details_dto_list(u.bagMovements)
+                bag_movement_list_to_bag_movement_details_dto_list(movement.bag_movements)
             return MovementDetailsDTO(**movement_d)
 
         except ValueError as e:
@@ -66,7 +66,7 @@ class MovementMapper(Mapper):
             A list of MovementDetailsDTO objects.
         """
         try:
-            return [self.movement_to_movement_details_dto(r) for r in movement_list]
+            return [self.movement_to_movement_details_dto(m) for m in movement_list]
         except ValueError as e:
             logging.exception(e)
             raise MalformedRequestException(str(e))

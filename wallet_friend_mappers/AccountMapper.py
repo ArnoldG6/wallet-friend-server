@@ -46,9 +46,25 @@ class AccountMapper(Mapper):
     def account_to_account_details_dto(self, account: Account):
         try:
             account_d = account.__dict__
-            account_d["single_incomes"] = MovementMapper.get_instance().\
-                movement_list_to_movement_details_dto_list(
-                account.single_incomes)
+            single_incomes = []
+            single_expenses = []
+            fixed_incomes = []
+            fixed_expenses = []
+            for m in account.movements:
+                if m.amount > 0:  # if it is positive
+                    single_incomes.append(m)
+                elif m.amount < 0:
+                    single_expenses.append(m)
+
+            for fm in account.fixed_movements:
+                if fm.amount > 0:  # if it is positive
+                    fixed_incomes.append(fm)
+                elif fm.amount < 0:
+                    fixed_expenses.append(fm)
+
+            account_d["single_incomes"] = MovementMapper.get_instance(). \
+                movement_list_to_movement_details_dto_list(single_incomes)
+            """
             account_d["single_expenses"] = MovementMapper.get_instance().\
                 movement_list_to_movement_details_dto_list(
                 account.single_expenses)
@@ -57,6 +73,7 @@ class AccountMapper(Mapper):
             account_d["fixed_expenses"] = FixedMovementMapper.get_instance(). \
                 fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_expenses)
             account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
+            """
             return AccountDetailsDTO(**account_d)
         except ValueError as e:
             logging.exception(e)

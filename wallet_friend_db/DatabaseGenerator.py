@@ -14,6 +14,7 @@ from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
 from wallet_friend_entities.Entities import updated_base, User, Account, Movement
 from wallet_friend_mappers.AccountMapper import AccountMapper
+from wallet_friend_mappers.MovementMapper import MovementMapper
 
 
 class DatabaseGenerator:
@@ -89,7 +90,10 @@ class DatabaseGenerator:
             ]
             account.total_balance = account.movements[0].amount + account.movements[1].amount
             session.flush()
-            #(AccountMapper.get_instance().account_to_account_details_dto(account))
+            #print(AccountMapper.get_instance().account_to_account_details_dto(account))
+            #print(account)
+            print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
+            print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             session.commit()
             session.close()
 

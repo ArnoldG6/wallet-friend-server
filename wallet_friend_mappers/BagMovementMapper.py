@@ -4,12 +4,12 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_dto.BagMovementDTO import BagMovementDetailsDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from wallet_friend_mappers import BagMapper
+from wallet_friend_mappers.BagMapper import BagMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -54,3 +54,17 @@ class BagMovementMapper(Mapper):
         except BaseException as e:
             logging.exception(e)
             raise MalformedRequestException()
+
+    def bag_movement_list_to_bag_movement_details_dto_list(self, bag_movement_list):
+        try:
+            return [self.bag_movement_to_bag_movement_details_dto(m) for m in bag_movement_list]
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
+        except MalformedRequestException as e:
+            logging.exception(e)
+            raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
+

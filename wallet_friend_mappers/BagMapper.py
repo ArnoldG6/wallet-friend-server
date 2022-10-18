@@ -10,7 +10,7 @@ from wallet_friend_dto.BagDTO import BagDetailsDTO
 from wallet_friend_entities.Entities import Bag
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from wallet_friend_mappers import HistoricBagMovementMapper
+from wallet_friend_mappers.HistoricBagMovementMapper import HistoricBagMovementMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 

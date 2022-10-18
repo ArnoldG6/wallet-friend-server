@@ -9,6 +9,8 @@ from datetime import datetime
 import pydantic
 from pydantic import BaseModel
 
+from wallet_friend_dto.BagMovementDTO import BagMovementDetailsDTO
+
 """
 =============================================Movement-related DTOs.=============================================
 """
@@ -43,6 +45,6 @@ class MovementDetailsDTO(BaseModel):
     creation_datetime: datetime
     name: str
     description: str
-    amount: int
-    available_amount: int
-    bagMovements: list
+    amount: float
+    available_amount: float
+    bagMovements: [BagMovementDetailsDTO]

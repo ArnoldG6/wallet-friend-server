@@ -10,7 +10,7 @@ from wallet_friend_dto.MovementDTO import MovementDetailsDTO
 from wallet_friend_entities.Entities import Movement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from wallet_friend_mappers import BagMovementMapper
+from wallet_friend_mappers.BagMovementMapper import BagMovementMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -44,7 +44,7 @@ class MovementMapper(Mapper):
     def movement_to_movement_details_dto(self, u):
         try:
             movement_d = u.__dict__
-            movement_d["bagMovements"] = BagMovementMapper.get_instance(). \
+            movement_d["bag_movements"] = BagMovementMapper.get_instance(). \
                 bag_movement_list_to_bag_movement_details_dto_list(u.bagMovements)
             return MovementDetailsDTO(**movement_d)
 

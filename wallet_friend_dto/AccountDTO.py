@@ -9,6 +9,9 @@ from datetime import datetime
 import pydantic
 from pydantic import BaseModel, validator
 
+from wallet_friend_dto.BagDTO import BagDetailsDTO
+from wallet_friend_dto.FixedMovementDTO import FixedMovementDetailsDTO
+from wallet_friend_dto.MovementDTO import MovementDetailsDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
@@ -49,8 +52,8 @@ class AccountDetailsDTO(BaseModel):
     owner: str  # username of the owner
     creation_datetime: datetime
     total_balance: float
-    single_incomes: list
-    single_expenses: list
-    fixed_incomes: list
-    fixed_expenses: list
-    bags: list
+    single_incomes: [MovementDetailsDTO]
+    single_expenses: [MovementDetailsDTO]
+    fixed_incomes: [FixedMovementDetailsDTO]
+    fixed_expenses: [FixedMovementDetailsDTO]
+    bags: [BagDetailsDTO]

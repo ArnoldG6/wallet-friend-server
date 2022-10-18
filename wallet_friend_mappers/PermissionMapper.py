@@ -51,9 +51,15 @@ class PermissionMapper(Mapper):
         """
         try:
             return PermissionDetailsDTO(**permission.__dict__)
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
 
     def permission_list_to_permission_details_dto_list(self, permission_list):
         """
@@ -64,7 +70,12 @@ class PermissionMapper(Mapper):
         """
         try:
             return parse_obj_as(List[PermissionDetailsDTO], [p.__dict__ for p in permission_list])
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()

@@ -12,8 +12,10 @@ from wallet_friend_dto import UserDetailsDTO
 from wallet_friend_entities import User
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers.AccountMapper import AccountMapper
 from wallet_friend_mappers.Mapper import Mapper
 from wallet_friend_mappers.RoleMapper import RoleMapper
+
 
 
 class UserMapper(Mapper):
@@ -47,8 +49,11 @@ class UserMapper(Mapper):
         try:
             user_d = u.__dict__
             user_d["roles"] = RoleMapper.get_instance().role_list_to_role_details_dto_list(u.roles)
+            #user_d["account"] = AccountMapper.get_instance().
             return UserDetailsDTO(**user_d)
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e

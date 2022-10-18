@@ -43,10 +43,13 @@ class HistoricBagMovementMapper(Mapper):
         try:
             historic_bag_movement_d = u.__dict__
             return HistoricBagMovementDetailsDTO(**historic_bag_movement_d)
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
         except BaseException as e:
             logging.exception(e)
             raise MalformedRequestException()
+

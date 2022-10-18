@@ -4,7 +4,7 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_dto.MovementDTO import MovementDetailsDTO
 from wallet_friend_entities.Entities import Movement
@@ -48,6 +48,9 @@ class MovementMapper(Mapper):
                 bag_movement_list_to_bag_movement_details_dto_list(u.bagMovements)
             return MovementDetailsDTO(**movement_d)
 
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
@@ -64,9 +67,15 @@ class MovementMapper(Mapper):
         """
         try:
             return [self.movement_to_movement_details_dto(r) for r in movement_list]
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
 
     """
     ==========================Input-purpose-mapping.==========================

@@ -47,7 +47,9 @@ class BagMapper(Mapper):
             bag_d["history"] = HistoricBagMovementMapper.get_instance(). \
                 historic_bag_movement_list_to_historic_bag_movement_details_dto_list(u.history)
             return BagDetailsDTO(**bag_d)
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
@@ -64,9 +66,15 @@ class BagMapper(Mapper):
             """
         try:
             return [self.bag_to_bag_details_dto(r) for r in bag_list]
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
 
     """
     ==========================Input-purpose-mapping.==========================

@@ -53,9 +53,15 @@ class RoleMapper(Mapper):
             role_d["permissions"] = PermissionMapper.get_instance(). \
                 permission_list_to_permission_details_dto_list(role_d["permissions"])
             return RoleDetailsDTO(**role_d)
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()
 
     def role_list_to_role_details_dto_list(self, role_list):
         """
@@ -66,6 +72,12 @@ class RoleMapper(Mapper):
         """
         try:
             return [self.role_to_role_details_dto(r) for r in role_list]
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise MalformedRequestException()

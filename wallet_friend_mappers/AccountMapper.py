@@ -4,13 +4,15 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_dto.AccountDTO import AccountDetailsDTO
 from wallet_friend_entities.Entities import Account
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
-from wallet_friend_mappers import MovementMapper, FixedMovementMapper, BagMapper
+from wallet_friend_mappers.MovementMapper import MovementMapper
+from wallet_friend_mappers.FixedMovementMapper import FixedMovementMapper
+from wallet_friend_mappers.BagMapper import BagMapper
 from wallet_friend_mappers.Mapper import Mapper
 
 
@@ -41,20 +43,24 @@ class AccountMapper(Mapper):
     ==========================Outer-purpose-mapping.==========================
     """
 
-    def account_to_account_details_dto(self, u):
+    def account_to_account_details_dto(self, account: Account):
         try:
-            account_d = u.__dict__
-            account_d["single_incomes"] = MovementMapper.get_instance().movement_list_to_movement_details_dto_list(
-                u.single_incomes)
-            account_d["single_expenses"] = MovementMapper.get_instance().movement_list_to_movement_details_dto_list(
-                u.single_expenses)
+            account_d = account.__dict__
+            account_d["single_incomes"] = MovementMapper.get_instance().\
+                movement_list_to_movement_details_dto_list(
+                account.single_incomes)
+            account_d["single_expenses"] = MovementMapper.get_instance().\
+                movement_list_to_movement_details_dto_list(
+                account.single_expenses)
             account_d["fixed_incomes"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(u.fixed_incomes)
+                fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_incomes)
             account_d["fixed_expenses"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(u.fixed_expenses)
-            account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(u.bags)
+                fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_expenses)
+            account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
             return AccountDetailsDTO(**account_d)
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e

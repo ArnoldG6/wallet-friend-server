@@ -45,7 +45,9 @@ class BagMovementMapper(Mapper):
             bag_movement_d = u.__dict__
             bag_movement_d["bag"] = BagMapper.get_instance().bag_to_bag_details_dto(u.bag)
             return BagMovementDetailsDTO(**bag_movement_d)
-
+        except ValueError as e:
+            logging.exception(e)
+            raise MalformedRequestException(str(e))
         except MalformedRequestException as e:
             logging.exception(e)
             raise e

@@ -66,7 +66,7 @@ class AccountMapper(Mapper):
                 movement_list_to_movement_details_dto_list(single_incomes)
             account_d["single_expenses"] = MovementMapper.get_instance().\
                 movement_list_to_movement_details_dto_list(
-                account.single_expenses)
+                single_expenses)
 
             account_d["fixed_incomes"] = FixedMovementMapper.get_instance(). \
                 fixed_movement_list_to_fixed_movement_details_dto_list(fixed_incomes)
@@ -74,7 +74,7 @@ class AccountMapper(Mapper):
                 fixed_movement_list_to_fixed_movement_details_dto_list(fixed_expenses)
 
             account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
-
+            account_d["owner"] = account.owner.username
             return AccountDetailsDTO(**account_d)
         except ValueError as e:
             logging.exception(e)

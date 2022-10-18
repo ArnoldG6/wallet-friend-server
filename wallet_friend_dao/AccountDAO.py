@@ -8,7 +8,7 @@ from __future__ import annotations
 import datetime
 
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_settings import default_db_settings_path

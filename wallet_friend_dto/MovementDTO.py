@@ -5,6 +5,7 @@ Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
 from datetime import datetime
+from typing import List, Optional
 
 import pydantic
 from pydantic import BaseModel
@@ -47,4 +48,4 @@ class MovementDetailsDTO(BaseModel):
     description: str
     amount: float
     available_amount: float
-    bag_movements: [BagMovementDetailsDTO]
+    bag_movements: List[BagMovementDetailsDTO]

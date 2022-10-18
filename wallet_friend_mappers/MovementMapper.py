@@ -44,6 +44,7 @@ class MovementMapper(Mapper):
     def movement_to_movement_details_dto(self, movement):
         try:
             movement_d = movement.__dict__
+            movement_d["owner"] = movement.account_id
             movement_d["bag_movements"] = BagMovementMapper.get_instance(). \
                 bag_movement_list_to_bag_movement_details_dto_list(movement.bag_movements)
             return MovementDetailsDTO(**movement_d)

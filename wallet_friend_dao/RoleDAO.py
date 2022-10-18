@@ -10,8 +10,7 @@ import datetime
 import logging
 from enum import Enum
 
-from sqlalchemy.orm.exc import NoResultFound
-
+from sqlalchemy.exc import NoResultFound
 from wallet_friend_dao.PermissionDAO import ClientPermission
 from wallet_friend_entities import Role, Permission
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException

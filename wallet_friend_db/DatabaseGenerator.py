@@ -5,13 +5,15 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 import datetime
+import logging
 
 from sqlalchemy import create_engine
 
 from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, User, Account
+from wallet_friend_entities.Entities import updated_base, User, Account, Movement
+from wallet_friend_mappers.AccountMapper import AccountMapper
 
 
 class DatabaseGenerator:
@@ -33,6 +35,7 @@ class DatabaseGenerator:
         """
         Inits default auth data
         """
+        # ======================== SO Of User-Role data ========================
         user = User()
         user.__dict__ |= {
             "username": "arnold",
@@ -52,7 +55,8 @@ class DatabaseGenerator:
         user.roles = [role]
         role.users.append(user)
         session.add(user)
-
+        # ======================== EO Of User-Role data ========================
+        # ======================== SO Of Account data ========================
         account = Account(
             creation_datetime=datetime.datetime.now(),
             total_balance=0.0,
@@ -62,9 +66,35 @@ class DatabaseGenerator:
 
         session.object_session(account)
         session.add(account)
+        try:
+            session.flush()
+            # ======================== EO Of Account data ========================
+            account.movements = [
+                Movement(
+                    creation_datetime=datetime.datetime.now(),
+                    account_id=account.id,
+                    amount=-666.0,
+                    available_amount=0.0,
+                    name="Cerveza chafa",
+                    description="algo"
+                ),
+                Movement(
+                    creation_datetime=datetime.datetime.now(),
+                    account_id=account.id,
+                    amount=5000.0,
+                    available_amount=5000.0,
+                    name="Billete encontrado",
+                    description="algo"
+                )
+            ]
+            account.total_balance = account.movements[0].amount + account.movements[1].amount
+            session.flush()
+            #(AccountMapper.get_instance().account_to_account_details_dto(account))
+            session.commit()
+            session.close()
 
-        session.commit()
-        session.close()
+        except BaseException as e:
+            logging.exception(e)
 
 
 DatabaseGenerator().generate()

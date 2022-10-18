@@ -5,6 +5,7 @@ Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
 from datetime import datetime
+from typing import List
 
 import pydantic
 from pydantic import BaseModel, validator
@@ -52,8 +53,8 @@ class AccountDetailsDTO(BaseModel):
     owner: str  # username of the owner
     creation_datetime: datetime
     total_balance: float
-    single_incomes: [MovementDetailsDTO]
-    single_expenses: [MovementDetailsDTO]
-    fixed_incomes: [FixedMovementDetailsDTO]
-    fixed_expenses: [FixedMovementDetailsDTO]
-    bags: [BagDetailsDTO]
+    single_incomes: List[MovementDetailsDTO]
+    single_expenses: List[MovementDetailsDTO]
+    fixed_incomes: List[FixedMovementDetailsDTO] #Error on hierarchy-needs to be checked
+    fixed_expenses: List[FixedMovementDetailsDTO] #Error on hierarchy-needs to be checked
+    bags: List[BagDetailsDTO]

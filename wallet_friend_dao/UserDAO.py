@@ -13,7 +13,7 @@ import re
 import time
 
 import jwt
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_entities import User

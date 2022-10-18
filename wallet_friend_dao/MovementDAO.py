@@ -7,7 +7,7 @@ GPL-3.0 license ©2022
 import datetime
 
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.testing.plugin.plugin_base import logging
+import logging
 
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from .DAO import DAO

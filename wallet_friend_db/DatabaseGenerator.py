@@ -149,7 +149,7 @@ class DatabaseGenerator:
                                                        amount=5000.0))
             # print(account.movements[0].bag_movements) print(BagMovementMapper.get_instance(
             # ).bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
-            print(AccountMapper.get_instance().account_to_account_details_dto(account))
+            # print(AccountMapper.get_instance().account_to_account_details_dto(account))
 
             # ======================== EO Of BagMovement data ========================
             session.commit()

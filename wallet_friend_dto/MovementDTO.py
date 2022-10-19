@@ -27,7 +27,7 @@ class MovementAddDTO(BaseModel):
     """
     owner: str  # owner's username
     name: str
-    description: str
+    description: str | None = ...
     amount: float
     available_amount: float
 
@@ -45,7 +45,7 @@ class MovementDetailsDTO(BaseModel):
     owner: str  # id of the account
     creation_datetime: datetime
     name: str
-    description: str
+    description: str | None = ...
     amount: float
     available_amount: float
     bag_movements: List[BagMovementDetailsDTO]

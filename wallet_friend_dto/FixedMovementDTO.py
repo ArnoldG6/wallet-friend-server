@@ -27,11 +27,12 @@ class FixedMovementAddDTO(BaseModel):
     """
     owner: int   # id of the account
     name: str
-    description: str
+    description: str | None = ...
     amount: float
     available_amount: float
     temporary_type: str
-    repeat_date: datetime
+    repeat_date: datetime | None = ...
+
 
 
 """
@@ -47,9 +48,9 @@ class FixedMovementDetailsDTO(BaseModel):
     owner: str  # id of the account
     creation_datetime: datetime
     name: str
-    description: str
+    description: str | None = ...
     amount: float
     available_amount: float
-    bag_movements: List[BagMovementDetailsDTO]
+    bag_movements: list
     temporary_type: str
-    repeat_date: datetime
+    repeat_date: datetime | None = ...

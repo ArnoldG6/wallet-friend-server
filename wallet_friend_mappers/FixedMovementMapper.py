@@ -7,7 +7,7 @@ GPL-3.0 license ©2022
 import logging
 
 from wallet_friend_dto.FixedMovementDTO import FixedMovementDetailsDTO
-from wallet_friend_entities.Entities import FixedMovement
+from wallet_friend_entities.Entities import FixedMovement, Movement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from wallet_friend_mappers.BagMovementMapper import BagMovementMapper
@@ -44,8 +44,11 @@ class FixedMovementMapper(Mapper):
     def fixed_movement_to_fixed_movement_details_dto(self, fixed_movement):
         try:
             fixed_movement_d = fixed_movement.__dict__
-            fixed_movement_d["bag_movements"] = BagMovementMapper.get_instance().\
+            fixed_movement.bag_movements = BagMovementMapper.get_instance(). \
                 bag_movement_list_to_bag_movement_details_dto_list(fixed_movement.bag_movements)
+            fixed_movement.owner = fixed_movement.account_id
+            if not fixed_movement_d.get("repeat_date", None):
+                fixed_movement.repeat_date = None
             return FixedMovementDetailsDTO(**fixed_movement_d)
 
         except MalformedRequestException as e:

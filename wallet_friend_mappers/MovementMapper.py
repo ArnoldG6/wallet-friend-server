@@ -47,6 +47,8 @@ class MovementMapper(Mapper):
             movement_d["owner"] = movement.account_id
             movement_d["bag_movements"] = BagMovementMapper.get_instance(). \
                 bag_movement_list_to_bag_movement_details_dto_list(movement.bag_movements)
+            #if not movement_d.get("description", None):
+           #     movement.description = None
             return MovementDetailsDTO(**movement_d)
 
         except ValueError as e:
@@ -86,6 +88,8 @@ class MovementMapper(Mapper):
         try:
             u = Movement()
             u.__dict__ |= movement_add_dto.dict()
+           # if not u.__dict__.get("description", None):
+            #    u.description = None
             u["account_id"] = u["owner"]
             del u["owner"]
             return u

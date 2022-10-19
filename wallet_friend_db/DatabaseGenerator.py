@@ -14,6 +14,7 @@ from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
 from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType
 from wallet_friend_mappers.AccountMapper import AccountMapper
+from wallet_friend_mappers.FixedMovementMapper import FixedMovementMapper
 from wallet_friend_mappers.MovementMapper import MovementMapper
 
 
@@ -93,7 +94,7 @@ class DatabaseGenerator:
             session.flush()
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))
             # print(account)
-            print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
+            #print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
             print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             # ======================== EO Of Movements data ========================
             # ======================== SO Of FixedMovements data ========================
@@ -117,7 +118,16 @@ class DatabaseGenerator:
                     temporary_type=str(TemporaryType.monthly.value),
                 )
             ]
+            #print(FixedMovementMapper.get_instance().
+            #      fixed_movement_to_fixed_movement_details_dto(account.fixed_movements[0]))
+            print(FixedMovementMapper.get_instance().
+                  fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
             # ======================== EO Of FixedMovements data ========================
+            # ======================== SO Of Bag data ========================
+
+            # ======================== EO Of Bag data ========================
+            # ======================== SO Of BagMovement data ========================
+            # ======================== EO Of BagMovement data ========================
             session.commit()
             session.close()
 

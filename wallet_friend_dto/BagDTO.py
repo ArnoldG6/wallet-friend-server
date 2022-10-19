@@ -39,6 +39,7 @@ class BagDetailsDTO(BaseModel):
     """
     Output DTO for displaying bag information.
     """
+    id: int
     owner: str  # id of the account
     name: str
     balance: float

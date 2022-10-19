@@ -4,7 +4,7 @@ Github username: "ArnoldG6".
 Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
-import datetime
+from datetime import datetime
 import logging
 
 from sqlalchemy import create_engine
@@ -12,8 +12,9 @@ from sqlalchemy import create_engine
 from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType
+from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType, Bag
 from wallet_friend_mappers.AccountMapper import AccountMapper
+from wallet_friend_mappers.BagMapper import BagMapper
 from wallet_friend_mappers.FixedMovementMapper import FixedMovementMapper
 from wallet_friend_mappers.MovementMapper import MovementMapper
 
@@ -46,7 +47,7 @@ class DatabaseGenerator:
             "first_name": "Arnold",
             "last_name": "González",
             "enabled": True,
-            "creation_datetime": datetime.datetime.now(),
+            "creation_datetime": datetime.now(),
             "token": None
         }
         session = UserDAO.get_instance("../wallet_friend_db/config.ini").create_session()
@@ -60,7 +61,7 @@ class DatabaseGenerator:
         # ======================== EO Of User-Role data ========================
         # ======================== SO Of Account data ========================
         account = Account(
-            creation_datetime=datetime.datetime.now(),
+            creation_datetime=datetime.now(),
             total_balance=0.0,
             owner_id=user.id,
             owner=user
@@ -74,7 +75,7 @@ class DatabaseGenerator:
             # ======================== SO Of Movements data ========================
             account.movements = [
                 Movement(
-                    creation_datetime=datetime.datetime.now(),
+                    creation_datetime=datetime.now(),
                     account_id=account.id,
                     amount=-666.0,
                     available_amount=0.0,
@@ -82,7 +83,7 @@ class DatabaseGenerator:
                     description="algo"
                 ),
                 Movement(
-                    creation_datetime=datetime.datetime.now(),
+                    creation_datetime=datetime.now(),
                     account_id=account.id,
                     amount=5000.0,
                     available_amount=5000.0,
@@ -94,13 +95,13 @@ class DatabaseGenerator:
             session.flush()
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))
             # print(account)
-            #print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
+            # print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
             print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             # ======================== EO Of Movements data ========================
             # ======================== SO Of FixedMovements data ========================
             account.fixed_movements = [
                 FixedMovement(
-                    creation_datetime=datetime.datetime.now(),
+                    creation_datetime=datetime.now(),
                     account_id=account.id,
                     amount=1200000.0,
                     available_amount=1200000.0,
@@ -109,7 +110,7 @@ class DatabaseGenerator:
                     temporary_type=str(TemporaryType.monthly.value),
                 ),
                 FixedMovement(
-                    creation_datetime=datetime.datetime.now(),
+                    creation_datetime=datetime.now(),
                     account_id=account.id,
                     amount=10000.0,
                     available_amount=0.0,
@@ -118,13 +119,23 @@ class DatabaseGenerator:
                     temporary_type=str(TemporaryType.monthly.value),
                 )
             ]
-            #print(FixedMovementMapper.get_instance().
+            # print(FixedMovementMapper.get_instance().
             #      fixed_movement_to_fixed_movement_details_dto(account.fixed_movements[0]))
             print(FixedMovementMapper.get_instance().
                   fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
             # ======================== EO Of FixedMovements data ========================
             # ======================== SO Of Bag data ========================
-
+            account.bags = [
+                Bag(creation_datetime=datetime.now(),
+                    account_id=account.id,
+                    balance=5000.0,
+                    goal_balance=40000.0,
+                    done=False,
+                    end_date=datetime.strptime('21/01/24 11:04:19', '%d/%m/%y %H:%M:%S')
+                    )
+            ]
+            session.flush()
+            print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
             # ======================== EO Of Bag data ========================
             # ======================== SO Of BagMovement data ========================
             # ======================== EO Of BagMovement data ========================

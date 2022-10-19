@@ -46,6 +46,7 @@ class BagMapper(Mapper):
             bag_d = bag.__dict__
             bag_d["history"] = HistoricBagMovementMapper.get_instance(). \
                 historic_bag_movement_list_to_historic_bag_movement_details_dto_list(bag.history)
+            bag_d["owner"] = bag.account_id
             return BagDetailsDTO(**bag_d)
         except ValueError as e:
             logging.exception(e)

@@ -45,7 +45,6 @@ class AccountMapper(Mapper):
 
     def account_to_account_details_dto(self, account: Account):
         try:
-            account_d = account.__dict__
             single_incomes = []
             single_expenses = []
             fixed_incomes = []
@@ -62,20 +61,22 @@ class AccountMapper(Mapper):
                 elif fm.amount < 0:
                     fixed_expenses.append(fm)
 
-            account_d["single_incomes"] = MovementMapper.get_instance(). \
-                movement_list_to_movement_details_dto_list(single_incomes)
-            account_d["single_expenses"] = MovementMapper.get_instance().\
-                movement_list_to_movement_details_dto_list(
-                single_expenses)
-
-            account_d["fixed_incomes"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_incomes)
-            account_d["fixed_expenses"] = FixedMovementMapper.get_instance(). \
-                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_expenses)
-
-            account_d["bags"] = BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
-            account_d["owner"] = account.owner.username
-            return AccountDetailsDTO(**account_d)
+            result = {
+                "id": account.id,
+                "owner": account.owner.username,
+                "creation_datetime": account.creation_datetime,
+                "total_balance": account.total_balance,
+                "single_incomes": MovementMapper.get_instance().
+                movement_list_to_movement_details_dto_list(single_incomes),
+                "single_expenses": MovementMapper.get_instance().
+                movement_list_to_movement_details_dto_list(single_expenses),
+                "fixed_incomes": FixedMovementMapper.get_instance().
+                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_incomes),
+                "fixed_expenses": FixedMovementMapper.get_instance().
+                fixed_movement_list_to_fixed_movement_details_dto_list(fixed_expenses),
+                "bags": BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags)
+            }
+            return AccountDetailsDTO(**result)
         except ValueError as e:
             logging.exception(e)
             raise MalformedRequestException(str(e))

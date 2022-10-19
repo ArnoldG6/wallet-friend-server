@@ -49,12 +49,12 @@ class AccountDetailsDTO(BaseModel):
     """
     Output DTO for displaying account information.
     """
-    id: str
+    id: int
     owner: str  # username of the owner
     creation_datetime: datetime
     total_balance: float
     single_incomes: List[MovementDetailsDTO]
     single_expenses: List[MovementDetailsDTO]
-    fixed_incomes: List[FixedMovementDetailsDTO] #Error on hierarchy-needs to be checked
-    fixed_expenses: List[FixedMovementDetailsDTO] #Error on hierarchy-needs to be checked
+    fixed_incomes: List[FixedMovementDetailsDTO]  # Error on hierarchy-needs to be checked
+    fixed_expenses: List[FixedMovementDetailsDTO]  # Error on hierarchy-needs to be checked
     bags: List[BagDetailsDTO]

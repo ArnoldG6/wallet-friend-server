@@ -12,9 +12,11 @@ from sqlalchemy import create_engine
 from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
-from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType, Bag
+from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType, Bag, \
+    BagMovement
 from wallet_friend_mappers.AccountMapper import AccountMapper
 from wallet_friend_mappers.BagMapper import BagMapper
+from wallet_friend_mappers.BagMovementMapper import BagMovementMapper
 from wallet_friend_mappers.FixedMovementMapper import FixedMovementMapper
 from wallet_friend_mappers.MovementMapper import MovementMapper
 
@@ -96,7 +98,7 @@ class DatabaseGenerator:
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))
             # print(account)
             # print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
-            print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
+            #print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             # ======================== EO Of Movements data ========================
             # ======================== SO Of FixedMovements data ========================
             account.fixed_movements = [
@@ -112,7 +114,7 @@ class DatabaseGenerator:
                 FixedMovement(
                     creation_datetime=datetime.now(),
                     account_id=account.id,
-                    amount=10000.0,
+                    amount=-10000.0,
                     available_amount=0.0,
                     name="Factura electricidad",
                     description="algo",
@@ -121,8 +123,8 @@ class DatabaseGenerator:
             ]
             # print(FixedMovementMapper.get_instance().
             #      fixed_movement_to_fixed_movement_details_dto(account.fixed_movements[0]))
-            print(FixedMovementMapper.get_instance().
-                  fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
+            #print(FixedMovementMapper.get_instance().
+           #       fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
             # ======================== EO Of FixedMovements data ========================
             # ======================== SO Of Bag data ========================
             account.bags = [
@@ -135,9 +137,25 @@ class DatabaseGenerator:
                     )
             ]
             session.flush()
-            print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
+            #print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
             # ======================== EO Of Bag data ========================
             # ======================== SO Of BagMovement data ========================
+            bag = account.bags[0]
+            #movements = account.movements
+
+            account.movements[0].bag_movements.append(BagMovement(creation_datetime=datetime.now(),
+                                                       bag_id=bag.id,
+                                                        bag=bag,
+                                                       amount=5000.0))
+            #print(account.movements[0].bag_movements)
+            #print(BagMovementMapper.get_instance().bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
+            print(AccountMapper.get_instance().account_to_account_details_dto(account))
+            """
+            id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+            creation_datetime = Column(DateTime, nullable=False)
+            amount = Column(Numeric, nullable=False)
+            origin = Column(BigInteger, ForeignKey('t_movement.id'), nullable=False)
+            """
             # ======================== EO Of BagMovement data ========================
             session.commit()
             session.close()

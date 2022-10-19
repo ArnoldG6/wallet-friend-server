@@ -165,15 +165,6 @@ class FixedMovement(Movement):
     }
 
 
-        
-
-
-
-
-
-
-
-
 class Bag(Base):
     """
         Bag class stores a list of movements

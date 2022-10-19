@@ -50,17 +50,17 @@ class AccountMapper(Mapper):
             fixed_incomes = []
             fixed_expenses = []
             for m in account.movements:
-                if m.amount > 0:  # if it is positive
-                    single_incomes.append(m)
-                elif m.amount < 0:
-                    single_expenses.append(m)
+                if m not in account.fixed_movements:
+                    if m.amount > 0:  # if it is positive
+                        single_incomes.append(m)
+                    elif m.amount < 0:
+                        single_expenses.append(m)
 
             for fm in account.fixed_movements:
                 if fm.amount > 0:  # if it is positive
                     fixed_incomes.append(fm)
                 elif fm.amount < 0:
                     fixed_expenses.append(fm)
-
             result = {
                 "id": account.id,
                 "owner": account.owner.username,

@@ -23,6 +23,7 @@ class BagAddDTO(BaseModel):
     Input DTO for bag addition.
     """
     owner: str  # id of the account
+    name: str
     balance: float
     goal_balance: float
     end_date: datetime
@@ -39,6 +40,7 @@ class BagDetailsDTO(BaseModel):
     Output DTO for displaying bag information.
     """
     owner: str  # id of the account
+    name: str
     balance: float
     history: list
     goal_balance: float

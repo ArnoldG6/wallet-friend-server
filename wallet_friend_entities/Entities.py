@@ -172,6 +172,7 @@ class Bag(Base):
 
     __tablename__ = 't_bag'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
+    name = Column(String(200), nullable=False)
     creation_datetime = Column(DateTime, nullable=False)
     balance = Column(Numeric, nullable=False)
     goal_balance = Column(Numeric, nullable=False)

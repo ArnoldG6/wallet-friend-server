@@ -98,7 +98,7 @@ class DatabaseGenerator:
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))
             # print(account)
             # print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
-            #print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
+            # print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             # ======================== EO Of Movements data ========================
             # ======================== SO Of FixedMovements data ========================
             account.fixed_movements = [
@@ -123,12 +123,13 @@ class DatabaseGenerator:
             ]
             # print(FixedMovementMapper.get_instance().
             #      fixed_movement_to_fixed_movement_details_dto(account.fixed_movements[0]))
-            #print(FixedMovementMapper.get_instance().
-           #       fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
+            # print(FixedMovementMapper.get_instance().
+            #       fixed_movement_list_to_fixed_movement_details_dto_list(account.fixed_movements))
             # ======================== EO Of FixedMovements data ========================
             # ======================== SO Of Bag data ========================
             account.bags = [
                 Bag(creation_datetime=datetime.now(),
+                    name="My bag",
                     account_id=account.id,
                     balance=5000.0,
                     goal_balance=40000.0,
@@ -137,16 +138,16 @@ class DatabaseGenerator:
                     )
             ]
             session.flush()
-            #print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
+            # print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
             # ======================== EO Of Bag data ========================
             # ======================== SO Of BagMovement data ========================
             bag = account.bags[0]
-            #movements = account.movements
+            # movements = account.movements
 
             account.movements[0].bag_movements.append(BagMovement(creation_datetime=datetime.now(),
-                                                       bag_id=bag.id,
-                                                        bag=bag,
-                                                       amount=5000.0))
+                                                                  bag_id=bag.id,
+                                                                  bag=bag,
+                                                                  amount=5000.0))
             # print(account.movements[0].bag_movements) print(BagMovementMapper.get_instance(
             # ).bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))

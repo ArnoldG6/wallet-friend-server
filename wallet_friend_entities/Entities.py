@@ -156,7 +156,8 @@ class FixedMovement(Movement):
     """
     __tablename__ = 't_fixed_movement'  # Indexed.
     id = Column(BigInteger, ForeignKey('t_movement.id'), primary_key=True, index=True)  # Auto-sequential.
-    temporary_type = Column(Enum(TemporaryType))
+    #temporary_type = Column(Enum(TemporaryType))
+    temporary_type = Column(String(200), nullable=False)
     repeat_date = Column(DateTime, nullable=True)
     # ===Movement relationship===
     __mapper_args__ = {

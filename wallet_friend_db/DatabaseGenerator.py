@@ -91,8 +91,8 @@ class DatabaseGenerator:
             ]
             account.total_balance = account.movements[0].amount + account.movements[1].amount
             session.flush()
-            #print(AccountMapper.get_instance().account_to_account_details_dto(account))
-            #print(account)
+            # print(AccountMapper.get_instance().account_to_account_details_dto(account))
+            # print(account)
             print(MovementMapper.get_instance().movement_to_movement_details_dto(account.movements[0]))
             print(MovementMapper.get_instance().movement_list_to_movement_details_dto_list(account.movements))
             # ======================== EO Of Movements data ========================
@@ -105,7 +105,16 @@ class DatabaseGenerator:
                     available_amount=1200000.0,
                     name="Salario",
                     description="algo",
-                    temporary_type=TemporaryType.monthly,
+                    temporary_type=str(TemporaryType.monthly.value),
+                ),
+                FixedMovement(
+                    creation_datetime=datetime.datetime.now(),
+                    account_id=account.id,
+                    amount=10000.0,
+                    available_amount=0.0,
+                    name="Factura electricidad",
+                    description="algo",
+                    temporary_type=str(TemporaryType.monthly.value),
                 )
             ]
             # ======================== EO Of FixedMovements data ========================

@@ -147,15 +147,10 @@ class DatabaseGenerator:
                                                        bag_id=bag.id,
                                                         bag=bag,
                                                        amount=5000.0))
-            #print(account.movements[0].bag_movements)
-            #print(BagMovementMapper.get_instance().bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
+            # print(account.movements[0].bag_movements) print(BagMovementMapper.get_instance(
+            # ).bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
             print(AccountMapper.get_instance().account_to_account_details_dto(account))
-            """
-            id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-            creation_datetime = Column(DateTime, nullable=False)
-            amount = Column(Numeric, nullable=False)
-            origin = Column(BigInteger, ForeignKey('t_movement.id'), nullable=False)
-            """
+
             # ======================== EO Of BagMovement data ========================
             session.commit()
             session.close()

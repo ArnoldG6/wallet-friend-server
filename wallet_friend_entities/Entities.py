@@ -36,7 +36,7 @@ class User(Base):
     roles = relationship('Role', secondary='t_user_role', back_populates='users', lazy='subquery')
     # ===Account relationship===
     # One to one.
-    account = relationship("Account", back_populates="owner", uselist=False)
+    account = relationship("Account", back_populates="owner", uselist=False, lazy='subquery')
 
 
 @pydantic.dataclasses.dataclass
@@ -103,7 +103,7 @@ class Account(Base):
     # ===User relationship===
     # One to one.
     owner_id = Column(BigInteger, ForeignKey("t_user.id"), nullable=False)
-    owner = relationship("User", back_populates="account")
+    owner = relationship("User", back_populates="account", lazy='subquery')
     # ===Movement relationship===
     # One to many.
     movements = relationship("Movement", back_populates="account", lazy="subquery")

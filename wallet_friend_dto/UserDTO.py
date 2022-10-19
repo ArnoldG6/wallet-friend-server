@@ -10,6 +10,7 @@ from datetime import datetime
 import pydantic
 from pydantic import BaseModel, validator
 
+from wallet_friend_dto.AccountDTO import AccountDetailsDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
 from wallet_friend_settings import default_password_pattern
 from wallet_friend_settings.settings import default_email_pattern
@@ -105,6 +106,7 @@ class UserDetailsDTO(BaseModel):
     enabled: bool
     creation_datetime: datetime
     roles: list
+    #account: AccountDetailsDTO
 
     @validator("username")
     def validate_username(cls, v):

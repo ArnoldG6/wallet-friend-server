@@ -21,6 +21,8 @@ from wallet_friend_entities.Entities import Account
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NotAuthorizedException, DisabledUserException, \
     MalformedRequestException, ExistentRecordException, NonExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
+from wallet_friend_mappers.AccountMapper import AccountMapper
+from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_settings import default_password_pattern, default_db_settings_path
 from wallet_friend_tools import check_non_empty_non_spaces_string
 from . import RoleDAO
@@ -83,7 +85,11 @@ class UserDAO(DAO):
                 if not u.enabled:  # If user is disabled.
                     raise DisabledUserException()
                 if u.token:
-                    return {"access_token": u.token, "user": u}
+                    return {
+                        "access_token": u.token,
+                        "user": UserMapper.get_instance().user_to_user_details_dto(u),
+                        "account": AccountMapper.get_instance().account_to_account_details_dto(u.account)
+                    }
                 expiration_time = 604800  # 604800s = 7 days.
                 now = int(time.time())
                 payload = {
@@ -94,7 +100,12 @@ class UserDAO(DAO):
                 }
                 u.token = jwt.encode(payload, secret_key, algorithm="HS256")
                 session.commit()
-                return {"access_token": u.token, "user": u}
+                # return {"access_token": u.token, "user": u}
+                return {
+                    "access_token": u.token,
+                    "user": UserMapper.get_instance().user_to_user_details_dto(u),
+                    "account": AccountMapper.get_instance().account_to_account_details_dto(u.account)
+                }
             except NoResultFound as e:
                 # Password or username is incorrect or in fact username does not exist.
                 logging.exception(f"DB Connection requested by user: '{username}' failed. Details: {e}")
@@ -106,6 +117,7 @@ class UserDAO(DAO):
             raise e
         finally:
             if session:
+                # session.expunge_all()
                 session.close()
                 logging.info(f"DB Connection requested by user: '{username}' closed.")
 
@@ -171,13 +183,13 @@ class UserDAO(DAO):
             if session:
                 session.close()
 
-    def check_authorization_by_username(self, username, token) -> User:
+    def check_authorization_by_username(self, username, token) -> dict:
         """
         Parameters:
             username: username from a User that needs auth verification.
             token: Token to check if it is expired or not.
         Returns:
-            User: Freshly-created and registered user.
+            dict:
         """
         session = None
         try:
@@ -190,7 +202,9 @@ class UserDAO(DAO):
                 u = session.query(User).filter((User.username == username)).one()  # Searching for an
                 # existent instance.
                 if u.token and u.token == token:  # If token is not expired.
-                    return u  # If the user is found successfully AND both tokens are equal.
+                    return {"user": UserMapper.get_instance().user_to_user_details_dto(u),
+                            "account": AccountMapper.get_instance().account_to_account_details_dto(u.account)
+                            }  # If the user is found successfully AND both tokens are equal.
                 raise NotAuthorizedException("Not authorized")
             except NoResultFound as e:
                 logging.exception(f"DB Connection failed. Details: {e}")
@@ -204,6 +218,7 @@ class UserDAO(DAO):
             raise e
         finally:
             if session:
+                # session.expunge_all()
                 session.close()
 
     def search_user_by_email(self, email: str):

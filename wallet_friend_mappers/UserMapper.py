@@ -49,7 +49,8 @@ class UserMapper(Mapper):
         try:
             user_d = u.__dict__
             user_d["roles"] = RoleMapper.get_instance().role_list_to_role_details_dto_list(u.roles)
-            #user_d["account"] = AccountMapper.get_instance().
+
+            #user_d["account"] = AccountMapper.get_instance().account_to_account_details_dto(u.account)
             return UserDetailsDTO(**user_d)
         except ValueError as e:
             logging.exception(e)

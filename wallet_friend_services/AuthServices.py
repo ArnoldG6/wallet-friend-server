@@ -10,12 +10,14 @@ import pydantic
 from flask import request as f_request
 
 from wallet_friend_dao import UserDAO
+from wallet_friend_dao.AccountDAO import AccountDAO
 from wallet_friend_dto import UserAuthDTO
 from wallet_friend_dto.UserDTO import UserRegisterDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException, ExpiredRequestException, \
     ExistentRecordException, NotAuthorizedException
 from wallet_friend_exceptions.WalletFriendExceptions import IncorrectParameterValueException
 from wallet_friend_manager import CodeManager, EmailManager
+from wallet_friend_mappers.AccountMapper import AccountMapper
 from wallet_friend_mappers.UserMapper import UserMapper
 from wallet_friend_tools import check_non_empty_non_spaces_string
 
@@ -47,10 +49,8 @@ class AuthService:
                 raise IncorrectParameterValueException("Invalid parameter 'secret_key' exception")
             if self.__request is not None:
                 try:
-                    result = UserDAO.get_instance().auth_user(UserAuthDTO(**self.__request.get_json()), secret_key)
-                    result["user"] = UserMapper.get_instance(). \
-                        user_to_user_details_dto(result["user"])  # Converts User to UserDetailsDTO
-                    return result
+
+                    return UserDAO.get_instance().auth_user(UserAuthDTO(**self.__request.get_json()), secret_key)
                 except pydantic.error_wrappers.ValidationError as e:
                     logging.exception(e)
                     raise MalformedRequestException()
@@ -107,8 +107,8 @@ class AuthService:
                         raise MalformedRequestException("Invalid path parameter 'token'")
                     # No UserDTO-mapping is required.
 
-                    user = UserDAO.get_instance().check_authorization_by_username(username, auth_token[-1])
-                    return {"user": UserMapper.get_instance().user_to_user_details_dto(user)}
+                    return UserDAO.get_instance().check_authorization_by_username(username, auth_token[-1])
+
                 except NotAuthorizedException as e:
                     logging.exception(e)
                     raise e

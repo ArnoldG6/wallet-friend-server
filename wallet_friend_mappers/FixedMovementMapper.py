@@ -43,10 +43,12 @@ class FixedMovementMapper(Mapper):
 
     def fixed_movement_to_fixed_movement_details_dto(self, fixed_movement):
         try:
+
             fixed_movement_d = fixed_movement.__dict__
-            fixed_movement.bag_movements = BagMovementMapper.get_instance(). \
+            fixed_movement_d["bag_movements"] = BagMovementMapper.get_instance(). \
                 bag_movement_list_to_bag_movement_details_dto_list(fixed_movement.bag_movements)
             fixed_movement.owner = fixed_movement.account_id
+            fixed_movement.temporary_type = "Monthly"
             if not fixed_movement_d.get("repeat_date", None):
                 fixed_movement.repeat_date = None
             return FixedMovementDetailsDTO(**fixed_movement_d)

@@ -182,7 +182,7 @@ class Bag(Base):
     # Many to one.
     account_id = Column(BigInteger, ForeignKey("t_account.id"), nullable=False)
     account = relationship("Account", back_populates="bags", lazy="subquery")
-    history = []
+    history = relationship("HistoricBagMovement", back_populates="bag", lazy="subquery")
 
 
 class BagMovement(Base):
@@ -205,6 +205,8 @@ class HistoricBagMovement(Base):
     creation_datetime = Column(DateTime, nullable=False)
     amount = Column(Numeric, nullable=False)
     origin = Column(BigInteger, ForeignKey('t_movement.id'), nullable=False)
+    bag_id = Column(BigInteger, ForeignKey("t_bag.id"))
+    bag = relationship("Bag", uselist=False, back_populates="history", lazy="subquery")
 
 
 # Updated base object for table generation script.

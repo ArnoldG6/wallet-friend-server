@@ -21,5 +21,5 @@ class HistoricBagMovementDetailsDTO(BaseModel):
     """
     creation_datetime: datetime
     amount: float
-    description: str
-    origin: float
+    # description: str
+    origin: int

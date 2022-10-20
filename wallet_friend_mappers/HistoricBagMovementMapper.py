@@ -42,6 +42,8 @@ class HistoricBagMovementMapper(Mapper):
     def historic_bag_movement_to_historic_bag_movement_details_dto(self, u):
         try:
             historic_bag_movement_d = u.__dict__
+            #if not u.__dict__.get("description",None):
+            #    u.description = None
             return HistoricBagMovementDetailsDTO(**historic_bag_movement_d)
         except ValueError as e:
             logging.exception(e)

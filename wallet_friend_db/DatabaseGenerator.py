@@ -13,7 +13,7 @@ from wallet_friend_dao import UserDAO
 from wallet_friend_dao.RoleDAO import RoleDAO
 from wallet_friend_db import DbSettingsParser
 from wallet_friend_entities.Entities import updated_base, User, Account, Movement, FixedMovement, TemporaryType, Bag, \
-    BagMovement
+    BagMovement, HistoricBagMovement
 from wallet_friend_mappers.AccountMapper import AccountMapper
 from wallet_friend_mappers.BagMapper import BagMapper
 from wallet_friend_mappers.BagMovementMapper import BagMovementMapper
@@ -88,7 +88,7 @@ class DatabaseGenerator:
                     creation_datetime=datetime.now(),
                     account_id=account.id,
                     amount=5000.0,
-                    available_amount=5000.0,
+                    available_amount=0.0,
                     name="Billete encontrado",
                     description="algo"
                 )
@@ -145,7 +145,7 @@ class DatabaseGenerator:
             # movements = account.movements
             print(BagMapper.get_instance().bag_to_bag_details_dto(bag))
             print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
-            account.movements[0].bag_movements.append(BagMovement(creation_datetime=datetime.now(),
+            account.movements[1].bag_movements.append(BagMovement(creation_datetime=datetime.now(),
                                                                   bag_id=bag.id,
                                                                   bag=bag,
                                                                   amount=5000.0))
@@ -153,6 +153,12 @@ class DatabaseGenerator:
             # ).bag_movement_list_to_bag_movement_details_dto_list(account.movements[0].bag_movements))
             # print(AccountMapper.get_instance().account_to_account_details_dto(account))
 
+            bag.history.append(HistoricBagMovement(creation_datetime=datetime.now(),
+                                                   amount=5000.0,
+                                                   origin=account.movements[1].id))
+
+            print(bag.history[0].amount)
+            session.flush()
             # ======================== EO Of BagMovement data ========================
             session.commit()
             session.close()

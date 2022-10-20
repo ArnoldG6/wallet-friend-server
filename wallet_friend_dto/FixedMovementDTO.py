@@ -45,7 +45,8 @@ class FixedMovementDetailsDTO(BaseModel):
     """
     Output DTO for displaying fixedMovement information.
     """
-    owner: str  # id of the account
+    id: int
+    owner: int  # id of the account
     creation_datetime: datetime
     name: str
     description: str | None = ...

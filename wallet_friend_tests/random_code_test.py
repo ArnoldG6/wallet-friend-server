@@ -1,5 +1,6 @@
 import json
 import random
+from hashlib import sha256
 
 
 def write_code(username):
@@ -7,7 +8,7 @@ def write_code(username):
     random_number = random.randint(10000000, 99999999)
     while random_number in obj.values():
         random_number = random.randint(10000000, 99999999)
-    obj[username] = random_number
+    obj[username] = sha256(str(random_number).encode('utf-8')).hexdigest()
     with open("sample.json", "w") as outfile:
         json.dump(obj, outfile)
 

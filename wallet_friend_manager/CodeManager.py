@@ -7,6 +7,7 @@ GPL-3.0 license ©2022
 import json
 import logging
 import random
+from hashlib import sha256
 
 from wallet_friend_entities.Entities import User
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
@@ -53,7 +54,7 @@ class CodeManager:
             random_number = self.calc_random_number()
             while random_number in users.values():
                 random_number = self.calc_random_number()
-            users[user.username] = random_number
+            users[user.username] = sha256(str(random_number).encode('utf-8')).hexdigest()
             with open("wallet_friend_manager/"+FILE_NAME, 'w') as file_object:
                 json.dump(users, file_object)
             return random_number

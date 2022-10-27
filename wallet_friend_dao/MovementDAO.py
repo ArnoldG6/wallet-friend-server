@@ -99,9 +99,8 @@ class MovementDAO(DAO):
     def delete(self, movement_id: int):
         try:
             session = self.create_session()
-            filters = (Movement.id == movement_id)
             try:
-                movement = session.query(Movement).filter(filters).one()
+                movement = session.query(Movement).filter((Movement.id == movement_id)).one()
                 session.delete(movement)
                 session.commit()
             except NoResultFound as e:

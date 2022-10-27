@@ -63,7 +63,7 @@ class MovementService:
             logging.exception(e)
             raise e
 
-    def delete_movement_service(self):
+    def delete_movement_service(self, movement_id: int):
         """
         Returns:
             None: if movement is registered correctly.
@@ -74,10 +74,9 @@ class MovementService:
                 raise ExpiredRequestException()
             AuthService(self.__request).check_authorization_user_service_by_token()
             try:
-                if self.__request.get_json()["movement_id"] is None or \
-                        not isinstance(self.__request.get_json()["movement_id"], int):
+                if movement_id is None:
                     raise MalformedRequestException("Invalid parameter 'movement_id'.")
-                MovementDAO.get_instance().delete(self.__request.get_json()["movement_id"])
+                MovementDAO.get_instance().delete(movement_id)
             except ValueError as e:
                 logging.exception(e)
                 raise MalformedRequestException

@@ -125,7 +125,7 @@ def movements_create_fixed_movement():
 @app.route(f"/api/{latest_version}/movements/<movement_id>", methods=["DELETE"])
 def movements_delete_movement(movement_id):
     try:
-        MovementService(request).delete_movement_service()
+        MovementService(request).delete_movement_service(movement_id)
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

@@ -106,13 +106,13 @@ class Account(Base):
     owner = relationship("User", back_populates="account", lazy='subquery')
     # ===Movement relationship===
     # One to many.
-    movements = relationship("Movement", back_populates="account", lazy="subquery")
+    movements = relationship("Movement", back_populates="account", lazy="subquery", passive_deletes=True)
     # ===FixedMovement relationship===
     # One to many.
-    fixed_movements = relationship("FixedMovement", lazy="subquery", overlaps="movements")  # , back_populates="account"
+    fixed_movements = relationship("FixedMovement", lazy="subquery", overlaps="movements", passive_deletes=True)  # , back_populates="account"
     # ===Bag relationship===
     # One to many.
-    bags = relationship("Bag", back_populates="account", lazy="subquery")
+    bags = relationship("Bag", back_populates="account", lazy="subquery", passive_deletes=True)
 
 
 class Movement(Base):
@@ -204,7 +204,7 @@ class HistoricBagMovement(Base):
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     creation_datetime = Column(DateTime, nullable=False)
     amount = Column(Numeric, nullable=False)
-    origin = Column(BigInteger, ForeignKey('t_movement.id'), nullable=False)
+    origin = Column(BigInteger, ForeignKey('t_movement.id', ondelete="CASCADE"), nullable=True)
     bag_id = Column(BigInteger, ForeignKey("t_bag.id"))
     bag = relationship("Bag", uselist=False, back_populates="history", lazy="subquery")
 

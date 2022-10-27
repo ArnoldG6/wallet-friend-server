@@ -124,6 +124,30 @@ class AuthService:
             logging.exception(e)
             raise e
 
+    def check_authorization_user_service_by_token(self):
+        try:
+            if self.__request is not None:
+                try:
+                    if self.__request.headers["Authorization"] is None:
+                        raise MalformedRequestException("Invalid path parameter 'token'")
+                    auth_token = self.__request.headers["Authorization"].split()
+                    if len(auth_token) != 2 or not auth_token[-1] or auth_token[-1] == "null":
+                        raise MalformedRequestException("Invalid path parameter 'token'")
+                    return UserDAO.get_instance().check_authorization_by_token(auth_token[-1])
+                except NotAuthorizedException as e:
+                    logging.exception(e)
+                    raise e
+                except MalformedRequestException as e:
+                    logging.exception(e)
+                    raise e
+                except BaseException as e:
+                    logging.exception(e)
+                    raise e
+            else:
+                raise ExpiredRequestException()
+        except BaseException as e:
+            logging.exception(e)
+            raise e
     def reset_password_service(self, latest_version: str):
         try:
             if self.__request is not None:

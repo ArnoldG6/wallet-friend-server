@@ -11,8 +11,9 @@ from flask import request as f_request
 from wallet_friend_dao.MovementDAO import MovementDAO
 from wallet_friend_dto.MovementDTO import MovementAddDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import ExpiredRequestException, ExistentRecordException, \
-    MalformedRequestException, NonExistentRecordException
+    MalformedRequestException, NonExistentRecordException, HttpWalletFriendException
 from wallet_friend_mappers.MovementMapper import MovementMapper
+from wallet_friend_services import AuthService
 
 
 class MovementService:
@@ -34,7 +35,9 @@ class MovementService:
         try:
             if not self.__request:
                 raise ExpiredRequestException()
+            AuthService(self.__request).check_authorization_user_service_by_token()
             try:
+
                 MovementDAO.get_instance().add(
                     MovementMapper.get_instance().
                     movement_add_dto_to_movement(
@@ -50,7 +53,12 @@ class MovementService:
             except BaseException as e:
                 logging.exception(e)
                 raise e
-
+            except HttpWalletFriendException as e:
+                logging.exception(e)
+                raise e
+        except HttpWalletFriendException as e:
+            logging.exception(e)
+            raise e
         except BaseException as e:
             logging.exception(e)
             raise e
@@ -61,8 +69,10 @@ class MovementService:
             None: if movement is registered correctly.
         """
         try:
+
             if not self.__request:
                 raise ExpiredRequestException()
+            AuthService(self.__request).check_authorization_user_service_by_token()
             try:
                 if self.__request.get_json()["movement_id"] is None or \
                         not isinstance(self.__request.get_json()["movement_id"], int):
@@ -77,8 +87,9 @@ class MovementService:
             except BaseException as e:
                 logging.exception(e)
                 raise e
-
+        except HttpWalletFriendException as e:
+            logging.exception(e)
+            raise e
         except BaseException as e:
             logging.exception(e)
             raise e
-

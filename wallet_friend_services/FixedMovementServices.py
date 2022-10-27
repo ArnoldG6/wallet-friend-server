@@ -12,8 +12,9 @@ from flask import request as f_request
 from wallet_friend_dao.FixedMovementDAO import FixedMovementDAO
 from wallet_friend_dto.FixedMovementDTO import FixedMovementAddDTO
 from wallet_friend_exceptions.HttpWalletFriendExceptions import ExpiredRequestException, ExistentRecordException, \
-    MalformedRequestException
+    MalformedRequestException, HttpWalletFriendException
 from wallet_friend_mappers.FixedMovementMapper import FixedMovementMapper
+from wallet_friend_services import AuthService
 
 
 class FixedMovementService:
@@ -31,8 +32,9 @@ class FixedMovementService:
         try:
             if not self.__request:
                 raise ExpiredRequestException()
-
+            AuthService(self.__request).check_authorization_user_service_by_token()
             try:
+
                 self.__request.get_json()["repeat_date"] = \
                     datetime.strptime(self.__request.get_json()["repeat_date"], '%d/%m/%Y %H:%M:%S')
                 FixedMovementDAO.get_instance().add(
@@ -52,7 +54,9 @@ class FixedMovementService:
                 logging.exception(e)
                 raise e
 
-
+        except HttpWalletFriendException as e:
+            logging.exception(e)
+            raise e
         except BaseException as e:
             logging.exception(e)
             raise e

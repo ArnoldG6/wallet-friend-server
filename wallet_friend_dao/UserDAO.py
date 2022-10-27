@@ -221,6 +221,39 @@ class UserDAO(DAO):
                 # session.expunge_all()
                 session.close()
 
+    def check_authorization_by_token(self, token: str) -> bool:
+        """
+        Parameters:
+            token: Token to check if it is valid or not.
+        Returns:
+            dict:
+        """
+        session = None
+        try:
+            if not token:
+                raise MalformedRequestException("Invalid parameter 'token' exception")
+            try:
+                session = self.create_session()
+                u = session.query(User).filter((User.token == token)).one()  # Searching for an
+                # existent instance.
+                if u.token:
+                    return True
+                raise NotAuthorizedException("Not authorized")
+            except NoResultFound as e:
+                logging.exception(f"DB Connection failed. Details: {e}")
+                raise NotAuthorizedException("Not authorized")
+            except BaseException as e:  # Any other Exception
+                logging.exception(f"DB Connection failed. Details: {e}")
+                raise e
+
+        except BaseException as e:  # Any other Exception
+            logging.exception(f"DB Connection failed. Details: {e}")
+            raise e
+        finally:
+            if session:
+                # session.expunge_all()
+                session.close()
+
     def search_user_by_email(self, email: str):
         """
         Parameters:

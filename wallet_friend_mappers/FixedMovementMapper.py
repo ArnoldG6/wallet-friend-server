@@ -81,8 +81,8 @@ class FixedMovementMapper(Mapper):
         try:
             u = FixedMovement()
             u.__dict__ |= fixed_movement_add_dto.dict()
-            u["account_id"] = u["owner"]
-            del u["owner"]
+            u.__dict__["account_id"] = u.__dict__["owner"]
+            del u.__dict__["owner"]
             return u
         except ValueError as e:
             logging.exception(e)

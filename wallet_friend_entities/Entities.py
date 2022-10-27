@@ -161,7 +161,7 @@ class FixedMovement(Movement):
     repeat_date = Column(DateTime, nullable=True)
     # ===Movement relationship===
     __mapper_args__ = {
-        "polymorphic_identity": "t_fixed_movement",
+        "polymorphic_identity": "t_fixed_movement"
     }
 
 

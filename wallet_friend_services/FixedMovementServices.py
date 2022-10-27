@@ -5,6 +5,7 @@ Contact me via "arnoldgq612@gmail.com".
 GPL-3.0 license ©2022
 """
 import logging
+from datetime import datetime
 
 from flask import request as f_request
 
@@ -32,6 +33,8 @@ class FixedMovementService:
                 raise ExpiredRequestException()
 
             try:
+                self.__request.get_json()["repeat_date"] = \
+                    datetime.strptime(self.__request.get_json()["repeat_date"], '%d/%m/%Y %H:%M:%S')
                 FixedMovementDAO.get_instance().add(
                     FixedMovementMapper.get_instance().
                     fixed_movement_add_dto_to_fixed_movement(

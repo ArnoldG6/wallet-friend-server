@@ -50,12 +50,13 @@ class MovementDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    def add(self, new_movement: Movement, account_id: str):
+    def add(self, new_movement: Movement):
         session = None
         a = None
         try:
             if not new_movement:
                 raise MalformedRequestException("Invalid parameter 'new_movement' exception")
+            account_id = new_movement.account_id
             session = self.create_session()
             try:
                 a = session.query(Account).filter(Account.id == account_id).one()

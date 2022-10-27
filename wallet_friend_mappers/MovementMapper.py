@@ -90,8 +90,8 @@ class MovementMapper(Mapper):
             u.__dict__ |= movement_add_dto.dict()
             # if not u.__dict__.get("description", None):
             #    u.description = None
-            u["account_id"] = u["owner"]
-            del u["owner"]
+            u.__dict__["account_id"] = u.__dict__["owner"]
+            del u.__dict__["owner"]
             return u
         except ValueError as e:
             logging.exception(e)

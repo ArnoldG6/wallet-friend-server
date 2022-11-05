@@ -84,3 +84,4 @@ class BagDAO(DAO):
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+

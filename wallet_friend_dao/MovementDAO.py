@@ -109,3 +109,5 @@ class MovementDAO(DAO):
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+
+    #def add_bag_movement_

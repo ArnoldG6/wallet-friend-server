@@ -96,7 +96,7 @@ class MovementService:
     def add_bag_movement_to_movement_service(self):
         """
           Returns:
-              None: if Bag is registered correctly.
+              None: if BagMovement is registered correctly.
           """
         try:
             AuthService(self.__request).check_authorization_user_service_by_token()

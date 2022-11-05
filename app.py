@@ -12,6 +12,7 @@ from flask_cors import CORS
 
 from wallet_friend_exceptions.HttpWalletFriendExceptions import InternalServerException, HttpWalletFriendException
 from wallet_friend_services import AuthService, MovementService, FixedMovementService
+from wallet_friend_services.BagServices import BagService
 
 """
 HTTP server config.
@@ -162,6 +163,7 @@ def movements_assign_movement_to_bag():
 @app.route(f"/api/{latest_version}/bags/create", methods=["POST"])
 def create_bag():
     try:
+        BagService(request).add_bag()
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)
@@ -170,6 +172,7 @@ def create_bag():
         logging.exception(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
+
 
 @app.route(f"/api/{latest_version}/bags/delete/<bag_id>", methods=["DELETE"])
 def delete_bag():
@@ -195,7 +198,6 @@ def delete_bag_movement_from_bag():
         logging.exception(e)
         e = InternalServerException()  # Exception overwrite to protect server's logs.
         return e.json(), e.get_code()
-
 
 
 """

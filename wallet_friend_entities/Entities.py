@@ -109,7 +109,8 @@ class Account(Base):
     movements = relationship("Movement", back_populates="account", lazy="subquery", passive_deletes=True)
     # ===FixedMovement relationship===
     # One to many.
-    fixed_movements = relationship("FixedMovement", lazy="subquery", overlaps="movements", passive_deletes=True)  # , back_populates="account"
+    fixed_movements = relationship("FixedMovement", lazy="subquery", overlaps="movements",
+                                   passive_deletes=True)  # , back_populates="account"
     # ===Bag relationship===
     # One to many.
     bags = relationship("Bag", back_populates="account", lazy="subquery", passive_deletes=True)
@@ -172,7 +173,7 @@ class Bag(Base):
 
     __tablename__ = 't_bag'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
-    name = Column(String(200), nullable=False)
+    name = Column(String(200), nullable=False, unique=True)
     creation_datetime = Column(DateTime, nullable=False)
     balance = Column(Numeric, nullable=False)
     goal_balance = Column(Numeric, nullable=False)

@@ -4,11 +4,15 @@ Github username: "Miguelgonz98".
 Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
+import datetime
 import logging
 
+from sqlalchemy.exc import NoResultFound
+
 from .DAO import DAO
-from wallet_friend_entities.Entities import Bag
-from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException
+from wallet_friend_entities.Entities import Bag, Account
+from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException, MalformedRequestException, \
+    ExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 
 
@@ -47,12 +51,39 @@ class BagDAO(DAO):
             raise e
 
     def add(self, new_bag: Bag):
+        session = None
         try:
+            if not new_bag:
+                raise MalformedRequestException("Invalid parameter 'new_bag' exception")
             session = self.create_session()
-            #Pending to do
-        except BaseException as e:
+            account = None
+            account_id = new_bag.account_id
+            new_bag.name = new_bag.name.title()
+            try:
+                if session.query(Bag).filter(Bag.name == new_bag.name).one():
+                    raise ExistentRecordException(f"Bag name '{new_bag.name}' already exists")
+            except NoResultFound:
+                pass
+            try:
+                account = session.query(Account).filter(Account.id == account_id).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException("Account does not exists")
+            new_bag.account = account
+            new_bag.account_id = account.id
+            new_bag.creation_datetime = datetime.datetime.now()
+            new_bag.done = False
+            new_bag.balance = 0
+            session.add(new_bag)
+            session.commit()
+        except ExistentRecordException as e:
+            logging.exception(e)
+            raise e
+        except Exception as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
+        finally:
+            if session:
+                session.close()
 
     def update(self, update_bag: Bag):
         try:

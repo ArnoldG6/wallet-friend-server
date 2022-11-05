@@ -34,9 +34,10 @@ class FixedMovementService:
                 raise ExpiredRequestException()
             AuthService(self.__request).check_authorization_user_service_by_token()
             try:
-
+                if not self.__request.get_json().get("repeat_date", None):
+                    raise MalformedRequestException("Missing field 'repeat_date'")
                 self.__request.get_json()["repeat_date"] = \
-                    datetime.strptime(self.__request.get_json()["repeat_date"], '%d/%m/%Y %H:%M:%S')
+                    datetime.strptime(self.__request.get_json()["repeat_date"], '%d/%m/%Y')
                 FixedMovementDAO.get_instance().add(
                     FixedMovementMapper.get_instance().
                     fixed_movement_add_dto_to_fixed_movement(

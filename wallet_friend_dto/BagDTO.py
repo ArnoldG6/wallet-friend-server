@@ -24,7 +24,7 @@ class BagAddDTO(BaseModel):
     """
     owner: int  # id of the account
     name: str
-    balance: float
+    # balance: float
     goal_balance: float
     end_date: datetime
 

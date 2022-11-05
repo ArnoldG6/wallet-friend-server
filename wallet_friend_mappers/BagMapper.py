@@ -5,7 +5,7 @@ Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
 import logging
-
+from datetime import datetime
 from wallet_friend_dto.BagDTO import BagDetailsDTO
 from wallet_friend_entities.Entities import Bag
 from wallet_friend_exceptions.HttpWalletFriendExceptions import MalformedRequestException
@@ -85,6 +85,9 @@ class BagMapper(Mapper):
         try:
             u = Bag()
             u.__dict__ |= bag_add_dto.dict()
+            u.__dict__["account_id"] = int(u.__dict__["owner"])
+            del u.__dict__["owner"]
+            # u.__dict__["end_date"] = datetime.strptime(u.__dict__["end_date"], '%d/%m/%Y')
             return u
         except ValueError as e:
             logging.exception(e)

@@ -12,7 +12,7 @@ import logging
 
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
 from .DAO import DAO
-from wallet_friend_entities.Entities import Movement, Account
+from wallet_friend_entities.Entities import Movement, Account, Bag, BagMovement, HistoricBagMovement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException, MalformedRequestException, \
     ExistentRecordException
 
@@ -65,7 +65,7 @@ class MovementDAO(DAO):
                 raise NonExistentRecordException("This record is not existent")
             new_movement.account = a
             new_movement.account_id = a.id
-            a.total_balance = Decimal(float(a.total_balance)+new_movement.amount)
+            a.total_balance = Decimal(float(a.total_balance) + new_movement.amount)
             new_movement.creation_datetime = datetime.datetime.now()
             # new_movement.bag_movements = []
             session.add(new_movement)
@@ -112,4 +112,44 @@ class MovementDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    #def add_bag_movement_
+    def add_bag_movement_to_movement(self, movement_id: int, bag_id: int, bag_movement_amount: float):
+        try:
+            session = self.create_session()
+            movement = None
+            bag = None
+            try:
+                movement = session.query(Movement).filter((Movement.id == movement_id)).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException('movement_id not found')
+            try:
+                bag = session.query(Bag).filter((Bag.id == bag_id)).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException('movement_id not found')
+            bag_movement = BagMovement(
+                creation_datetime=datetime.datetime.now(),
+                bag_id=bag.id,
+                bag=bag,
+                movement_id=movement.id,
+                amount=bag_movement_amount
+            )
+            account = bag.account
+            account.total_balance = Decimal(float(account.total_balance) + bag_movement_amount)
+            bag.balance = Decimal(float(bag.balance)+bag_movement_amount)
+            if bag.balance > bag.goal_balance:
+                bag.done = True
+            session.add(bag_movement)
+            session.flush()
+            historic_bag_movement = HistoricBagMovement(
+                creation_datetime=datetime.datetime.now(),
+                amount=bag_movement_amount,
+                origin=movement.id,
+                bag_id=bag.id,
+                bag=bag
+            )
+
+            session.add(historic_bag_movement)
+            session.commit()
+
+        except BaseException as e:
+            logging.exception(f"DB Connection failed. Details: {e}")
+            raise e

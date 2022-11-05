@@ -136,10 +136,10 @@ def movements_delete_movement(movement_id):
         return e.json(), e.get_code()
 
 
-@app.route(f"/api/{latest_version}/movements/assign-to-bag", methods=["POST"])
+@app.route(f"/api/{latest_version}/movements/assign-to-bag", methods=["PATCH"])
 def movements_assign_movement_to_bag():
     try:
-        # Service goes here
+        MovementService(request).add_bag_movement_to_movement_service()
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

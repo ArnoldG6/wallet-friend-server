@@ -24,3 +24,4 @@ class BagMovementDetailsDTO(BaseModel):
     creation_datetime: datetime
     bag: BagDetailsDTO
     amount: float
+

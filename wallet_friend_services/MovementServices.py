@@ -93,7 +93,7 @@ class MovementService:
             logging.exception(e)
             raise e
 
-    def add_bag_to_movement_service(self):
+    def add_bag_movement_to_movement_service(self):
         """
           Returns:
               None: if Bag is registered correctly.
@@ -101,8 +101,19 @@ class MovementService:
         try:
             AuthService(self.__request).check_authorization_user_service_by_token()
             try:
-                pass
-                #MovementDAO.get_instance().
+                movement_id = self.__request.get_json().get("movement_id", None)
+                if not movement_id:
+                    raise MalformedRequestException("Missing field 'movement_id'.")
+                bag_id = self.__request.get_json().get("bag_id", None)
+                if not bag_id:
+                    raise MalformedRequestException("Missing field 'bag_id'.")
+                amount = self.__request.get_json().get("amount", None)
+                if not amount:
+                    raise MalformedRequestException("Missing field 'amount'.")
+
+                MovementDAO.get_instance().add_bag_movement_to_movement(
+                    movement_id, bag_id, amount
+                )
             except ValueError as e:
                 logging.exception(e)
                 raise MalformedRequestException

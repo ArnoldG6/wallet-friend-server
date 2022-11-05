@@ -21,6 +21,7 @@ class BagMovementDetailsDTO(BaseModel):
     """
     Output BagMovement DTO
     """
+    id: int
     creation_datetime: datetime
     bag: BagDetailsDTO
     amount: float

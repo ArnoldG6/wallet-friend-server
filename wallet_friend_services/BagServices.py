@@ -26,7 +26,7 @@ class BagService:
             raise ExpiredRequestException()
         self.__request = request
 
-    def add_bag(self):
+    def add_bag_service(self):
         """
           Returns:
               None: if Bag is registered correctly.
@@ -59,7 +59,7 @@ class BagService:
             logging.exception(e)
             raise e
 
-    def delete_bag(self, bag_id: int):
+    def delete_bag_service(self, bag_id: int):
         """
           Returns:
               None: if Bag is deleted correctly.
@@ -68,6 +68,22 @@ class BagService:
             if bag_id is None:
                 raise MalformedRequestException("Missing field 'bag_id'")
             BagDAO.get_instance().delete(bag_id)
+        except HttpWalletFriendException as e:
+            logging.exception(e)
+            raise e
+        except BaseException as e:
+            logging.exception(e)
+            raise e
+
+    def delete_bag_movement_from_bag_service(self, bag_movement_id: int):
+        """
+          Returns:
+              None: if BagMovement is deleted correctly.
+          """
+        try:
+            if bag_movement_id is None:
+                raise MalformedRequestException("Missing field 'bag_movement_id'")
+            BagDAO.get_instance().delete_bag_movement_from_bag(bag_movement_id)
         except HttpWalletFriendException as e:
             logging.exception(e)
             raise e

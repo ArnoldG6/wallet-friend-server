@@ -10,7 +10,7 @@ import logging
 from sqlalchemy.exc import NoResultFound
 
 from .DAO import DAO
-from wallet_friend_entities.Entities import Bag, Account
+from wallet_friend_entities.Entities import Bag, Account, BagMovement
 from wallet_friend_exceptions.HttpWalletFriendExceptions import NonExistentRecordException, MalformedRequestException, \
     ExistentRecordException
 from wallet_friend_exceptions.WalletFriendExceptions import SingletonObjectException
@@ -93,10 +93,10 @@ class BagDAO(DAO):
             if bag is None:
                 raise NonExistentRecordException()
             else:
-                bag.balance=update_bag.balance
-                bag.goal_balance=update_bag.goal_balance
-                bag.done=update_bag.done
-                #Pending updates
+                bag.balance = update_bag.balance
+                bag.goal_balance = update_bag.goal_balance
+                bag.done = update_bag.done
+                # Pending updates
                 session.commit()
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
@@ -116,3 +116,16 @@ class BagDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
+    def delete_bag_movement_from_bag(self, bag_movement_id: int):
+        try:
+            bag_movement_to_delete = None
+            session = self.create_session()
+            try:
+                bag_movement_to_delete = session.query(BagMovement).filter((BagMovement.id == bag_movement_id)).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException(f"BagMovement with id '{bag_movement_id}' does not exists.")
+            session.delete(bag_movement_to_delete)
+            session.commit()
+        except BaseException as e:
+            logging.exception(f"DB Connection failed. Details: {e}")
+            raise e

@@ -163,7 +163,7 @@ def movements_assign_movement_to_bag():
 @app.route(f"/api/{latest_version}/bags/create", methods=["POST"])
 def create_bag():
     try:
-        BagService(request).add_bag()
+        BagService(request).add_bag_service()
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)
@@ -177,7 +177,7 @@ def create_bag():
 @app.route(f"/api/{latest_version}/bags/delete/<bag_id>", methods=["DELETE"])
 def delete_bag(bag_id):
     try:
-        BagService(request).delete_bag(bag_id)
+        BagService(request).delete_bag_service(bag_id)
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)
@@ -188,9 +188,10 @@ def delete_bag(bag_id):
         return e.json(), e.get_code()
 
 
-@app.route(f"/api/{latest_version}/bags/delete/<bag_id>/<bag_movement_id>", methods=["DELETE"])
-def delete_bag_movement_from_bag():
+@app.route(f"/api/{latest_version}/bags/bag_movements/delete/<bag_movement_id>", methods=["DELETE"])
+def delete_bag_movement_from_bag(bag_movement_id):
     try:
+        BagService(request).delete_bag_movement_from_bag_service(bag_movement_id)
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

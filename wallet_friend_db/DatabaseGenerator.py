@@ -52,8 +52,8 @@ class DatabaseGenerator:
             "creation_datetime": datetime.now(),
             "token": None
         }
-        session = UserDAO.get_instance("../wallet_friend_db/config.ini").create_session()
-        role = RoleDAO.get_instance("../wallet_friend_db/config.ini").export_default_client_role()
+        session = UserDAO.get_instance(db_settings_path).create_session()
+        role = RoleDAO.get_instance(db_settings_path).export_default_client_role()
         session.object_session(role)
         session.add(role)
         # session.merge(user)

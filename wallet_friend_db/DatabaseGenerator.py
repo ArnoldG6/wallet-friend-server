@@ -30,7 +30,8 @@ class DatabaseGenerator:
         """
         # Warning!: Run only once when you need to create the DB
         db_settings_path = "../wallet_friend_db/config.ini"
-        default_profile = "local_postgresql"
+        # default_profile = "local_postgresql"
+        default_profile = "cloud_postgresql"
         db_settings = DbSettingsParser.get_instance().read_db_config(filename=db_settings_path,
                                                                      section=default_profile)
         db_string = f"postgresql://{db_settings['user']}:{db_settings['password']}@{db_settings['host']}:{db_settings['port']}/{db_settings['database']}"
@@ -143,8 +144,8 @@ class DatabaseGenerator:
             # ======================== SO Of BagMovement data ========================
             bag = account.bags[0]
             # movements = account.movements
-            #print(BagMapper.get_instance().bag_to_bag_details_dto(bag))
-            #print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
+            # print(BagMapper.get_instance().bag_to_bag_details_dto(bag))
+            # print(BagMapper.get_instance().bag_list_to_bag_details_dto_list(account.bags))
             account.movements[1].bag_movements.append(BagMovement(creation_datetime=datetime.now(),
                                                                   bag_id=bag.id,
                                                                   bag=bag,

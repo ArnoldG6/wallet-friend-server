@@ -202,6 +202,9 @@ def delete_bag_movement_from_bag(bag_movement_id):
         return e.json(), e.get_code()
 
 
+@app.route(f"/api/{latest_version}/test", methods=["GET"])
+def test_route():
+    return {"test_status": "okay"}, 200
 """
 ==============================================EO Bag web services==================================================
 """

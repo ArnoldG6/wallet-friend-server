@@ -78,7 +78,7 @@ class BagDAO(DAO):
         except ExistentRecordException as e:
             logging.exception(e)
             raise e
-        except Exception as e:  # Any other Exception
+        except BaseException as e:  # Any other Exception
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
         finally:
@@ -102,16 +102,16 @@ class BagDAO(DAO):
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e
 
-    def delete(self, delete_bag: Bag):
+    def delete(self, bag_to_delete_id: int):
         try:
+            bag_to_delete = None
             session = self.create_session()
-            filters = (Bag.id == delete_bag.id)
-            bag = session.query(Bag).filter(filters).one()
-            if bag is None:
-                raise NonExistentRecordException()
-            else:
-                session.delete(bag)
-                session.commit()
+            try:
+                bag_to_delete = session.query(Bag).filter((Bag.id == bag_to_delete_id)).one()
+            except NoResultFound as e:
+                raise NonExistentRecordException(f"Bag with id '{bag_to_delete_id}' does not exists.")
+            session.delete(bag_to_delete)
+            session.commit()
         except BaseException as e:
             logging.exception(f"DB Connection failed. Details: {e}")
             raise e

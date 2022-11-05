@@ -193,7 +193,7 @@ class BagMovement(Base):
     __tablename__ = 't_bag_movement'  # Indexed.
     id = Column(BigInteger, primary_key=True, index=True)  # Auto-sequential.
     creation_datetime = Column(DateTime, nullable=False)
-    bag_id = Column(BigInteger, ForeignKey('t_bag.id'))
+    bag_id = Column(BigInteger, ForeignKey('t_bag.id', ondelete="CASCADE"))
     bag = relationship("Bag", lazy="subquery")
     movement_id = Column(BigInteger, ForeignKey('t_movement.id'))
     # movement = relationship("Movement", back_populates="bag_movements", lazy="subquery")
@@ -206,6 +206,7 @@ class HistoricBagMovement(Base):
     creation_datetime = Column(DateTime, nullable=False)
     amount = Column(Numeric, nullable=False)
     origin = Column(BigInteger, ForeignKey('t_movement.id', ondelete="CASCADE"), nullable=True)
+    # origin = Column(BigInteger, nullable=False)
     bag_id = Column(BigInteger, ForeignKey("t_bag.id"))
     bag = relationship("Bag", uselist=False, back_populates="history", lazy="subquery")
 

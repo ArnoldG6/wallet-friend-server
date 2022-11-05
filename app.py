@@ -175,8 +175,9 @@ def create_bag():
 
 
 @app.route(f"/api/{latest_version}/bags/delete/<bag_id>", methods=["DELETE"])
-def delete_bag():
+def delete_bag(bag_id):
     try:
+        BagService(request).delete_bag(bag_id)
         return {"success": True}, 201
     except HttpWalletFriendException as e:
         logging.exception(e)

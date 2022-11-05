@@ -5,6 +5,7 @@ Contact me via "mgonzalex236@gmail.com".
 GPL-3.0 license ©2022
 """
 import datetime
+from decimal import Decimal
 
 from sqlalchemy.exc import NoResultFound
 import logging
@@ -64,6 +65,7 @@ class MovementDAO(DAO):
                 raise NonExistentRecordException("This record is not existent")
             new_movement.account = a
             new_movement.account_id = a.id
+            a.total_balance = Decimal(float(a.total_balance)+new_movement.amount)
             new_movement.creation_datetime = datetime.datetime.now()
             # new_movement.bag_movements = []
             session.add(new_movement)

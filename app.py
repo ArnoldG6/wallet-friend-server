@@ -150,6 +150,59 @@ def movements_assign_movement_to_bag():
         return e.json(), e.get_code()
 
 
+"""
+==============================================EO Movement web services==================================================
+"""
+
+"""
+==============================================SO Bag web services==================================================
+"""
+
+
+@app.route(f"/api/{latest_version}/bags/create", methods=["POST"])
+def create_bag():
+    try:
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
+
+@app.route(f"/api/{latest_version}/bags/delete/<bag_id>", methods=["DELETE"])
+def delete_bag():
+    try:
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
+
+
+@app.route(f"/api/{latest_version}/bags/delete/<bag_id>/<bag_movement_id>", methods=["DELETE"])
+def delete_bag_movement_from_bag():
+    try:
+        return {"success": True}, 201
+    except HttpWalletFriendException as e:
+        logging.exception(e)
+        return e.json(), e.get_code()
+    except BaseException as e:
+        logging.exception(e)
+        e = InternalServerException()  # Exception overwrite to protect server's logs.
+        return e.json(), e.get_code()
+
+
+
+"""
+==============================================EO Bag web services==================================================
+"""
+
+
 def start_development_server():
     """
     Warning!: Development use only.  Do not use on production.

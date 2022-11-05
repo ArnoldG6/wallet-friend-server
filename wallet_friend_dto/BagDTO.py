@@ -22,7 +22,7 @@ class BagAddDTO(BaseModel):
     """
     Input DTO for bag addition.
     """
-    owner: str  # id of the account
+    owner: int  # id of the account
     name: str
     balance: float
     goal_balance: float

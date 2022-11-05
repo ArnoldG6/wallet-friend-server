@@ -219,4 +219,6 @@ def start_development_server():
 
 
 if __name__ == '__main__':
-    start_development_server()
+    #start_development_server()
+    logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
+    app.run(threaded=True, port=80)

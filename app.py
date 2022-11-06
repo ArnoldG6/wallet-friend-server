@@ -202,23 +202,18 @@ def delete_bag_movement_from_bag(bag_movement_id):
         return e.json(), e.get_code()
 
 
-@app.route(f"/api/{latest_version}/test", methods=["GET"])
+@app.route(f"/test", methods=["GET"])
 def test_route():
     return {"test_status": "okay"}, 200
+
+
 """
 ==============================================EO Bag web services==================================================
 """
 
 
-def start_development_server():
-    """
-    Warning!: Development use only.  Do not use on production.
-    """
-    logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
-    app.run(threaded=True, port=80)
-
-
 if __name__ == '__main__':
-    #start_development_server()
+    # Threaded option to enable multiple instances for multiple user access support
     logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
     app.run(threaded=True, port=80)
+

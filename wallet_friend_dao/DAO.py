@@ -18,8 +18,8 @@ class DAO:
     def __init__(self, path=default_db_settings_path()):
         self.__db_settings_path = path
         self.__session = None
-        # self.__default_profile = "local_postgresql"
-        self.__default_profile = "cloud_postgresql"
+        self.__default_profile = "local_postgresql"
+        # self.__default_profile = "cloud_postgresql"
         self.__db_settings = DbSettingsParser.get_instance().read_db_config(filename=self.__db_settings_path,
                                                                             section=self.__default_profile)
         self.__db_string = f"postgresql://{self.__db_settings['user']}:{self.__db_settings['password']}@{self.__db_settings['host']}:{self.__db_settings['port']}/{self.__db_settings['database']}"

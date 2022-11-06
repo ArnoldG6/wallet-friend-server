@@ -215,5 +215,6 @@ def test_route():
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(asctime)s - %(message)s')
-    app.run(threaded=True, port=80)
+   # app.run(threaded=True, port=80)
+    app.run(threaded=True, port=5000)
 

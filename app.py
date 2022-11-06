@@ -202,7 +202,7 @@ def delete_bag_movement_from_bag(bag_movement_id):
         return e.json(), e.get_code()
 
 
-@app.route(f"/test", methods=["GET"])
+@app.route("/testxd", methods=["GET"])
 def test_route():
     return {"test_status": "okay"}, 200
 
